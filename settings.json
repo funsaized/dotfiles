@@ -1,0 +1,139 @@
+{
+  "security.workspace.trust.untrustedFiles": "open",
+  "editor.fontSize": 16,
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.editorAssociations": {
+    "*.class": "default"
+  },
+  // "workbench.colorCustomizations": {
+  //   "tab.activeBorder": "#00E5E5",
+  //   "list.inactiveSelectionForeground": "#00E5E5",
+  //   "list.activeSelectionBackground": "#00a6a9"
+  // },
+  // "editor.tokenColorCustomizations": {
+  //   "textMateRules": [
+  //     {
+  //       "scope": "punctuation",
+  //       "settings": {
+  //         "foreground": "#ffffff"
+  //       }
+  //     },
+  //     {
+  //       "scope": "storage.modifier",
+  //       "settings": {
+  //         "foreground": "#d0d0d0",
+  //         "fontStyle": "italic"
+  //       }
+  //     },
+  //     {
+  //       "scope": "punctuation.definition.comment",
+  //       "settings": {
+  //         "foreground": "#676767",
+  //         "fontStyle": "italic"
+  //       }
+  //     },
+  //     {
+  //       "scope": "punctuation.definition.tag.begin",
+  //       "settings": {
+  //         "foreground": "#d0d0d0"
+  //       }
+  //     },
+  //     {
+  //       "scope": "punctuation.definition.tag.end",
+  //       "settings": {
+  //         "foreground": "#d0d0d0"
+  //       }
+  //     },
+  //     {
+  //       "scope": "punctuation.definition.string.begin",
+  //       "settings": {
+  //         "foreground": "#f7bb9f"
+  //       }
+  //     },
+  //     {
+  //       "scope": "punctuation.definition.string.end",
+  //       "settings": {
+  //         "foreground": "#f7bb9f"
+  //       }
+  //     },
+  //     {
+  //       "scope": "variable.other.object",
+  //       "settings": {
+  //         "foreground": "#569cd6"
+  //       }
+  //     },
+  //     {
+  //       "scope": "variable.other.property",
+  //       "settings": {
+  //         "foreground": "#569cd6"
+  //       }
+  //     },
+  //     {
+  //       "scope": "variable.other.readwrite",
+  //       "settings": {
+  //         "foreground": "#569cd6"
+  //       }
+  //     },
+  //     {
+  //       "scope": "meta.identifier",
+  //       "settings": {
+  //         "foreground": "#CE9178"
+  //       }
+  //     }
+  //   ]
+  // },
+  "window.autoDetectColorScheme": true,
+  "workbench.colorTheme": "Noctis Sereno",
+  "workbench.preferredDarkColorTheme": "Noctis Sereno",
+  "workbench.preferredLightColorTheme": "Ayu Light",
+  "workbench.startupEditor": "none",
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "vsicons.dontShowNewVersionMessage": true,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.java$",
+        "cmd": "google-java-format --replace ${file}"
+      }
+    ]
+  },
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  "redhat.telemetry.enabled": true,
+  "java.import.gradle.java.home": "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/",
+  "java.jdt.ls.java.home": "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/",
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/Users/saiguy/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
+  "editor.renderWhitespace": "all",
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.formatOnPaste": true,
+  "editor.fontFamily": "Operator Mono, Fira Code",
+  "editor.fontLigatures": true,
+  "editor.lineHeight": 22,
+  "vscode_custom_css.imports": ["file:///Users/saiguy/.vscode/style.css"],
+  "liveServer.settings.donotShowInfoMsg": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "typescript.format.semicolons": "insert",
+  "javascript.format.semicolons": "insert",
+  "workbench.sideBar.location": "right",
+  "git.openRepositoryInParentFolders": "always",
+
+  "editor.inlineSuggest.enabled": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[java]": { 
+    "editor.tabSize": 2 
+  },
+  "github.copilot.editor.enableAutoCompletions": true
+}
+
