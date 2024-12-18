@@ -1,15 +1,5 @@
 {
-  "[java]": {
-    "editor.tabSize": 2
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.tabSize": 2
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.tabSize": 2
-  },
+  // Editor Core Settings
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
@@ -17,8 +7,9 @@
   "editor.fontLigatures": true,
   "editor.fontSize": 16,
   "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
   "editor.inlineSuggest.enabled": true,
-  "editor.lineHeight": 1.5,
+  "editor.lineHeight": 1.6,
   "editor.minimap.enabled": false,
   "editor.multiCursorModifier": "ctrlCmd",
   "editor.renderWhitespace": "all",
@@ -30,9 +21,74 @@
         "settings": {
           "fontStyle": "italic"
         }
-      },
+      }
     ]
   },
+  // Language Specific Settings
+  "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "[java]": {
+    "editor.tabSize": 2
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  // File Management
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.factorypath": true,
+    "**/.project": true,
+    "**/.settings": true
+  },
+  // Git Settings
+  "git.openRepositoryInParentFolders": "always",
+  // GitHub Settings
+  "github.copilot.editor.enableAutoCompletions": true,
+  // Java Settings
+  "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
+  "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/Users/saiguy/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
+  // JavaScript/TypeScript Settings
+  "javascript.format.semicolons": "insert",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.format.semicolons": "insert",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // Prettier Settings
+  "prettier.tabWidth": 2,
+  // Theme and UI Settings
+  "material-icon-theme.folders.color": "#8695b7",
+  "material-icon-theme.folders.theme": "specific",
+  "material-icon-theme.hidesExplorerArrows": true,
+  "vscode_custom_css.imports": [
+    "file:///Users/saiguy/.vscode/style.css"
+  ],
+  "workbench.colorTheme": "Halcyon",
+  "workbench.editor.showTabs": "single",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.sideBar.location": "right",
+  // Misc Tool Settings
+  "azureResourceGroups.selectedSubscriptions": [],
+  "cmake.pinnedCommands": [
+    "workbench.action.tasks.configureTaskRunner",
+    "workbench.action.tasks.runTask"
+  ],
+  "cmake.showOptionsMovedNotification": false,
   "emeraldwalk.runonsave": {
     "commands": [
       {
@@ -41,36 +97,14 @@
       }
     ]
   },
-  "files.exclude": {
-    "**/.classpath": true,
-    "**/.factorypath": true,
-    "**/.project": true,
-    "**/.settings": true
-  },
-  "github.copilot.editor.enableAutoCompletions": true,
-  "git.openRepositoryInParentFolders": "always",
-  "java.import.gradle.java.home": "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/",
-  "java.jdt.ls.java.home": "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/",
-  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/Users/saiguy/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
-  "javascript.format.semicolons": "insert",
   "liveServer.settings.donotShowInfoMsg": true,
   "quarkus.tools.alwaysShowWelcomePage": false,
   "redhat.telemetry.enabled": true,
   "security.promptForLocalFileProtocolHandling": false,
   "security.workspace.trust.untrustedFiles": "open",
-  "typescript.format.semicolons": "insert",
   "vsicons.dontShowNewVersionMessage": true,
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "vscode_custom_css.imports": ["file:///Users/saiguy/.vscode/style.css"],
-  "workbench.colorTheme": "Noctis Sereno",
-  "workbench.editor.showTabs": "single",
   "workbench.editorAssociations": {
     "*.class": "default"
-  },
-  "workbench.iconTheme": "vscode-icons",
-  "workbench.sideBar.location": "right",
-  "workbench.startupEditor": "none",
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "typescript.updateImportsOnFileMove.enabled": "always"
+  }
 }
-
