@@ -1,19 +1,20 @@
 {
-    // Editor Core Settings
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
-    },
-    "editor.fontFamily": "Operator Mono Lig, Fira Code",
+    // ===================================
+    // Editor Configuration
+    // ===================================
+    "editor.fontFamily": "Operator Mono Lig Book, Times new roman",
     "editor.fontLigatures": true,
     "editor.fontSize": 16,
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "editor.inlineSuggest.enabled": true,
     "editor.lineHeight": 1.6,
-    "editor.minimap.enabled": false,
     "editor.multiCursorModifier": "ctrlCmd",
     "editor.renderWhitespace": "all",
     "editor.suggestSelection": "first",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.inlineSuggest.enabled": true,
     "editor.tokenColorCustomizations": {
         "textMateRules": [
             {
@@ -24,10 +25,18 @@
             }
         ]
     },
+    // ===================================
+    // Minimap Settings
+    // ===================================
+    "editor.minimap.enabled": false,
+    "editor.minimap.showSlider": "mouseover",
+    "editor.minimap.scale": 1,
+    "editor.minimap.size": "proportional",
+    "editor.minimap.side": "right",
+    "editor.minimap.renderCharacters": false,
+    // ===================================
     // Language Specific Settings
-    "[c]": {
-        "editor.defaultFormatter": "xaver.clang-format"
-    },
+    // ===================================
     "[java]": {
         "editor.tabSize": 2
     },
@@ -48,70 +57,84 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.tabSize": 2
     },
+    // ===================================
+    // JavaScript/TypeScript
+    // ===================================
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "javascript.format.semicolons": "insert",
+    "typescript.format.semicolons": "insert",
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    // ===================================
+    // Java Configuration
+    // ===================================
+    "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
+    "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms200m",
+    // ===================================
+    // Prettier Configuration
+    // ===================================
+    "prettier.tabWidth": 2,
+    // ===================================
+    // Workbench & UI
+    // ===================================
+    "workbench.editor.showTabs": "single",
+    "workbench.sideBar.location": "right",
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Catppuccin Mocha",
+    "workbench.iconTheme": "catppuccin-latte",
+    "workbench.editorAssociations": {
+        "*.class": "default"
+    },
+    // ===================================
+    // Terminal Configuration
+    // ===================================
+    "terminal.external.osxExec": "Warp.app",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.fontFamily": "Operator Mono Lig Book",
+    // ===================================
     // File Management
+    // ===================================
     "files.exclude": {
         "**/.classpath": true,
         "**/.factorypath": true,
         "**/.project": true,
         "**/.settings": true
     },
-    // Git Settings
+    // ===================================
+    // Version Control
+    // ===================================
     "git.openRepositoryInParentFolders": "always",
-    // GitHub Settings
+    "diffEditor.ignoreTrimWhitespace": false,
+    // ===================================
+    // Extensions
+    // ===================================
     "github.copilot.editor.enableAutoCompletions": true,
-    // Java Settings
-    "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
-    "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
-    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/Users/saiguy/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
-    // JavaScript/TypeScript Settings
-    "javascript.format.semicolons": "insert",
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "typescript.format.semicolons": "insert",
-    "typescript.preferences.includePackageJsonAutoImports": "on",
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    // Prettier Settings
-    "prettier.tabWidth": 2,
-    // Theme and UI Settings
-    "material-icon-theme.folders.color": "#8695b7",
-    "material-icon-theme.folders.theme": "specific",
-    "material-icon-theme.hidesExplorerArrows": true,
+    "redhat.telemetry.enabled": true,
+    "vsicons.dontShowNewVersionMessage": true,
+    "extensions.ignoreRecommendations": true,
     "vscode_custom_css.imports": [
         "file:///Users/saiguy/.vscode/style.css"
     ],
-    "workbench.colorTheme": "Halcyon",
-    "workbench.editor.showTabs": "single",
-    "workbench.sideBar.location": "right",
-    "workbench.startupEditor": "none",
-    // Misc Tool Settings
-    "azureResourceGroups.selectedSubscriptions": [],
-    "cmake.pinnedCommands": [
-        "workbench.action.tasks.configureTaskRunner",
-        "workbench.action.tasks.runTask"
-    ],
-    "cmake.showOptionsMovedNotification": false,
-    "emeraldwalk.runonsave": {
-        "commands": [
-            {
-                "match": "\\.java$",
-                "cmd": "google-java-format --replace ${file}"
-            }
-        ]
-    },
-    "liveServer.settings.donotShowInfoMsg": true,
-    "quarkus.tools.alwaysShowWelcomePage": false,
-    "redhat.telemetry.enabled": true,
+    // ===================================
+    // Security
+    // ===================================
     "security.promptForLocalFileProtocolHandling": false,
     "security.workspace.trust.untrustedFiles": "open",
-    "vsicons.dontShowNewVersionMessage": true,
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "workbench.editorAssociations": {
-        "*.class": "default"
-    },
-    "extensions.ignoreRecommendations": true,
-    "cursor.cpp.enablePartialAccepts": true,
-    "workbench.iconTheme": "material-icon-theme",
+    // ===================================
+    // Windsurf
+    // ===================================
     "windsurf.enableTabToJump": false,
     "windsurf.enableConfig": {
         "*": true
-    }
+    },
+    // ===================================
+    // Other
+    // ===================================
+    "azureResourceGroups.selectedSubscriptions": [],
+    "liveServer.settings.donotShowInfoMsg": true,
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "cursor.cpp.enablePartialAccepts": true
 }
