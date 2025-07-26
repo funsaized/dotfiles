@@ -28,6 +28,5 @@
   },
   "project_panel": {
     "dock": "right"
-  },
-  "double_click_in_multibuffer": "open"
+  }
 }
