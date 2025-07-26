@@ -7,26 +7,52 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
   "icon_theme": "Catppuccin Latte",
   "agent": {
+    "default_profile": "ask",
     "default_model": {
-      "provider": "google",
-      "model": "gemini-2.0-flash"
+      "provider": "copilot_chat",
+      "model": "gpt-4.1"
     },
     "play_sound_when_agent_done": true
   },
   "base_keymap": "Cursor",
   "ui_font_size": 16,
-  "ui_font_family": "Operator Mono Lig",
+  "ui_font_family": "Operator Mono",
+  "ui_font_weight": 300,
   "buffer_font_size": 16,
   "buffer_font_family": "Operator Mono Lig",
-  "buffer_line_height": "comfortable",
+  "buffer_line_height": {
+    "custom": 1.6
+  },
   "theme": {
     "mode": "system",
     "light": "Catppuccin Mocha",
     "dark": "One Dark"
   },
+  "terminal": {
+    "font_family": "Operator Mono Lig",
+    "font_size": 16,
+    "shell": {
+      "program": "zsh"
+    },
+    "working_directory": "current_project_directory",
+    "env": {
+      "TERM": "xterm-256color"
+    }
+  },
   "project_panel": {
     "dock": "right"
-  }
+  },
+  "file_scan_exclusions": [
+    "**/.classpath",
+    "**/.factorypath",
+    "**/.project",
+    "**/.settings",
+    "**/node_modules",
+    "**/.git"
+  ]
 }
