@@ -1,0 +1,33 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "icon_theme": "Catppuccin Latte",
+  "agent": {
+    "default_model": {
+      "provider": "google",
+      "model": "gemini-2.0-flash"
+    },
+    "play_sound_when_agent_done": true
+  },
+  "base_keymap": "Cursor",
+  "ui_font_size": 16,
+  "ui_font_family": "Operator Mono Lig",
+  "buffer_font_size": 16,
+  "buffer_font_family": "Operator Mono Lig",
+  "buffer_line_height": "comfortable",
+  "theme": {
+    "mode": "system",
+    "light": "Catppuccin Mocha",
+    "dark": "One Dark"
+  },
+  "project_panel": {
+    "dock": "right"
+  },
+  "double_click_in_multibuffer": "open"
+}
