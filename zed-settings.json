@@ -12,10 +12,11 @@
   },
   "icon_theme": "Catppuccin Latte",
   "agent": {
-    "default_profile": "write",
+    "always_allow_tool_actions": true,
+    "default_profile": "ask",
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-sonnet-4"
+      "provider": "copilot_chat",
+      "model": "gemini-2.5-pro"
     },
     "play_sound_when_agent_done": true
   },
@@ -47,6 +48,7 @@
   "project_panel": {
     "dock": "right"
   },
+  // Hide tab bar completely for a single-tab experience
   "tab_bar": {
     "show": false
   },
@@ -57,5 +59,101 @@
     "**/.settings",
     "**/node_modules",
     "**/.git"
-  ]
+  ],
+
+  "lsp": {
+    "typescript-language-server": {
+      "settings": {
+        "typescript": {
+          "suggest": {
+            "autoImports": true
+          },
+          "preferences": {
+            "importModuleSpecifier": "relative"
+          }
+        }
+      }
+    },
+    "eslint": {
+      "settings": {
+        "codeActionOnSave": {
+          "rules": ["import/order"]
+        },
+        "rulesCustomizations": [
+          {
+            "rule": "*",
+            "severity": "warn"
+          }
+        ],
+        "workingDirectory": {
+          "mode": "auto"
+        }
+      }
+    }
+  },
+
+  // Prettier formatting configuration
+  "format_on_save": "on",
+  "formatter": "prettier",
+  "prettier": {
+    "allowed": true,
+    "package_manager": "yarn"
+  },
+  "languages": {
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "TypeScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "TSX": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "JSON": {
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "CSS": {
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "SCSS": {
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "HTML": {
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "Markdown": {
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    }
+  }
 }
