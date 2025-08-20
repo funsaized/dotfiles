@@ -53,12 +53,53 @@
     "show": false
   },
   "file_scan_exclusions": [
-    "**/.classpath",
-    "**/.factorypath",
-    "**/.project",
-    "**/.settings",
+    // Dependencies
     "**/node_modules",
-    "**/.git"
+    "**/bower_components",
+    "**/vendor",
+    "**/.pnp",
+    "**/.pnp.js",
+
+    // Build outputs
+    "**/dist",
+    "**/build",
+    "**/out",
+    "**/.next",
+    "**/.nuxt",
+    "**/.output",
+    "**/target",
+
+    // Cache directories
+    "**/.cache",
+    "**/.turbo",
+    "**/.parcel-cache",
+    "**/.webpack-cache",
+    "**/eslintcache",
+
+    // Test artifacts
+    "**/coverage",
+    "**/.nyc_output",
+    "**/test-results",
+
+    // Large generated files
+    "**/*.min.js",
+    "**/*.min.css",
+    "**/bundle.js",
+    "**/*-lock.json",
+    "**/*.map",
+    "**/package-lock.json",
+
+    // Environment and logs
+    "**/.env.local",
+    "**/.env.*.local",
+    "**/logs",
+    "**/*.log",
+
+    // IDE/Editor
+    "**/.idea",
+    "**/.vscode",
+    "**/*.swp",
+    "**/*.swo"
   ],
 
   "lsp": {
