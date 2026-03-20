@@ -1,20 +1,72 @@
 {
-    // ===================================
-    // Editor Configuration
-    // ===================================
-    "editor.fontFamily": "Operator Mono Lig Book, Times new roman",
+    // ===================================================
+    // EDITOR — TYPOGRAPHY
+    // [USER-SPECIFIC] Operator Mono is a paid font;
+    //   fallbacks (shareable): Fira Code, Menlo, Monaco, Courier New
+    // ===================================================
+    "editor.fontFamily": "Operator Mono Lig, Operator Mono Book, Fira Code, Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
+    "editor.fontWeight": "400",
     "editor.fontSize": 16,
     "editor.lineHeight": 1.6,
-    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.letterSpacing": 0.2,
+
+    // ===================================================
+    // EDITOR — CURSOR & SCROLLING
+    // ===================================================
+    "editor.cursorStyle": "line-thin",
+    "editor.cursorBlinking": "phase",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.smoothScrolling": true,
+    "editor.scrollBeyondLastLine": false,
+
+    // ===================================================
+    // EDITOR — DISPLAY
+    // ===================================================
     "editor.renderWhitespace": "all",
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 110,
+    "editor.stickyScroll.enabled": true,
+    "editor.unicodeHighlight.ambiguousCharacters": true,
+
+    // ===================================================
+    // EDITOR — NAVIGATION
+    // ===================================================
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.gotoLocation.multipleDefinitions": "gotoAndPeek",
+    "editor.gotoLocation.multipleReferences": "peek",
+    "editor.occurrencesHighlight": "singleFile",
+    "editor.selectionHighlight": false,
+
+    // ===================================================
+    // EDITOR — SUGGESTIONS & HINTS
+    // ===================================================
     "editor.suggestSelection": "first",
+    "editor.inlineSuggest.enabled": true,
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "editor.parameterHints.enabled": true,
+
+    // ===================================================
+    // EDITOR — CODE ACTIONS & FORMATTING
+    // ===================================================
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "editor.inlineSuggest.enabled": true,
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+
+    // ===================================================
+    // EDITOR — VISUAL DECORATIONS
+    // ===================================================
+    "editor.guides.indentation": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.minimap.enabled": true,
+    "editor.minimap.showSlider": "mouseover",
+    "editor.minimap.scale": 1,
+    "editor.minimap.size": "fill",
+    "editor.minimap.side": "right",
+    "editor.minimap.renderCharacters": false,
     "editor.tokenColorCustomizations": {
         "textMateRules": [
             {
@@ -22,27 +74,70 @@
                 "settings": {
                     "fontStyle": "italic"
                 }
+            },
+            {
+                "scope": [
+                    "comment",
+                    "comment.line",
+                    "comment.block",
+                    "punctuation.definition.comment"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            },
+            // TypeScript: types, interfaces, enums, type parameters, decorators
+            {
+                "scope": [
+                    "entity.name.type.ts",
+                    "entity.name.type.class.ts",
+                    "entity.name.type.interface.ts",
+                    "entity.name.type.enum.ts",
+                    "variable.parameter.type.ts",
+                    "meta.decorator.ts"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            },
+            // Java: classes, interfaces, enums, annotations
+            {
+                "scope": [
+                    "entity.name.type.class.java",
+                    "entity.name.type.interface.java",
+                    "entity.name.type.enum.java",
+                    "meta.annotation.java"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
             }
         ]
     },
-    // ===================================
-    // Minimap Settings
-    // ===================================
-    "editor.minimap.enabled": false,
-    "editor.minimap.showSlider": "mouseover",
-    "editor.minimap.scale": 1,
-    "editor.minimap.size": "proportional",
-    "editor.minimap.side": "right",
-    "editor.minimap.renderCharacters": false,
-    // ===================================
-    // Language Specific Settings
-    // ===================================
+    "editor.semanticTokenColorCustomizations": {
+        "rules": {
+            "comment": {
+                "italic": true
+            }
+        }
+    },
+
+    // ===================================================
+    // LANGUAGE-SPECIFIC OVERRIDES
+    // ===================================================
     "[java]": {
         "editor.tabSize": 2
     },
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.tabSize": 2
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
@@ -53,88 +148,339 @@
     "[scss]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.tabSize": 2
+    "[markdown]": {
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
-    // ===================================
-    // JavaScript/TypeScript
-    // ===================================
-    "javascript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.importModuleSpecifier": "relative",
-    "javascript.format.semicolons": "insert",
-    "typescript.format.semicolons": "insert",
-    "typescript.preferences.includePackageJsonAutoImports": "on",
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    // ===================================
-    // Java Configuration
-    // ===================================
-    "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
-    "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk/22.0.1/libexec/openjdk.jdk/Contents/Home",
-    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms200m",
-    // ===================================
-    // Prettier Configuration
-    // ===================================
+
+    // ===================================================
+    // JAVASCRIPT / TYPESCRIPT
+    // ===================================================
+    "js/ts.preferences.importModuleSpecifier": "relative",
+    "js/ts.format.semicolons": "insert",
+    "js/ts.updateImportsOnFileMove.enabled": "always",
+    "js/ts.preferences.includePackageJsonAutoImports": "on",
+
+    // ===================================================
+    // JAVA
+    // [MACHINE-SPECIFIC] Paths below are Homebrew-managed on macOS.
+    //   Update to match local JDK install location (e.g. via `java_home -V`).
+    // ===================================================
+    "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk@21/21.0.7/libexec/openjdk.jdk/Contents/Home",
+    "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk@21/21.0.7/libexec/openjdk.jdk/Contents/Home",
+    // Tune heap bounds to your available RAM; Xmx12G requires ≥ 16 GB
+    "java.jdt.ls.vmargs": "-XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -Dsun.zip.disableMemoryMapping=true -Xmx12G -Xms1G",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.workspaceCacheLimit": 200,
+    "java.maxConcurrentBuilds": 4,
+    "java.import.gradle.arguments": "--stacktrace",
+
+    // ===================================================
+    // PYTHON
+    // [MACHINE-SPECIFIC] Add any venv/interpreter paths needed locally
+    // ===================================================
+    "python.analysis.extraPaths": [],
+
+    // ===================================================
+    // PRETTIER
+    // ===================================================
     "prettier.tabWidth": 2,
-    // ===================================
-    // Workbench & UI
-    // ===================================
+    "prettier.resolveGlobalModules": true,
+
+    // ===================================================
+    // WORKBENCH & UI
+    // [USER-SPECIFIC] colorTheme requires "Kanagawa" extension
+    // [USER-SPECIFIC] iconTheme requires "Catppuccin Icons" extension
+    // ===================================================
+    "workbench.colorTheme": "Kanagawa",
+    "workbench.iconTheme": "catppuccin-latte",
     "workbench.editor.showTabs": "single",
     "workbench.sideBar.location": "right",
     "workbench.startupEditor": "none",
-    "workbench.colorTheme": "Catppuccin Mocha",
-    "workbench.iconTheme": "catppuccin-latte",
+    "workbench.list.smoothScrolling": true,
+    "workbench.panel.showLabels": false,
     "workbench.editorAssociations": {
         "*.class": "default"
     },
-    // ===================================
-    // Terminal Configuration
-    // ===================================
-    "terminal.external.osxExec": "Warp.app",
+    "breadcrumbs.enabled": true,
+
+    // ===================================================
+    // ZEN MODE
+    // ===================================================
+    "zenMode.fullScreen": false,
+    "zenMode.centerLayout": true,
+
+    // ===================================================
+    // TERMINAL
+    // [MACHINE-SPECIFIC] defaultProfile.osx is macOS-only;
+    //   remove or change to "bash" on Linux
+    // ===================================================
     "terminal.integrated.defaultProfile.osx": "zsh",
-    "terminal.integrated.fontFamily": "Operator Mono Lig Book",
-    // ===================================
-    // File Management
-    // ===================================
+    "terminal.integrated.enableVisualBell": true,
+
+    // ===================================================
+    // FILE MANAGEMENT
+    // ===================================================
     "files.exclude": {
         "**/.classpath": true,
         "**/.factorypath": true,
         "**/.project": true,
-        "**/.settings": true
+        "**/.settings": true,
+        "**/target": true,
+        "**/.gradle": true,
+        "**/.idea": true,
+        "**/.vscode": true,
+        "**/out": true,
+        "**/coverage": true
     },
-    // ===================================
-    // Version Control
-    // ===================================
+    "files.watcherExclude": {
+        "**/target/**": true,
+        "**/node_modules/**": true,
+        "**/.git/**": true,
+        "**/build/**": true,
+        "**/dist/**": true,
+        "**/.gradle/**": true,
+        "**/.m2/**": true,
+        "**/.idea/**": true,
+        "**/.vscode/**": true,
+        "**/out/**": true,
+        "**/coverage/**": true
+    },
+
+    // ===================================================
+    // SEARCH
+    // ===================================================
+    "search.followSymlinks": false,
+    "search.useIgnoreFiles": true,
+
+    // ===================================================
+    // VERSION CONTROL
+    // ===================================================
     "git.openRepositoryInParentFolders": "always",
+    "diffEditor.renderSideBySide": true,
     "diffEditor.ignoreTrimWhitespace": false,
-    // ===================================
-    // Extensions
-    // ===================================
-    "github.copilot.editor.enableAutoCompletions": true,
-    "redhat.telemetry.enabled": true,
-    "vsicons.dontShowNewVersionMessage": true,
+    "scm.diffDecorations": "all",
+
+    // ===================================================
+    // DEBUG
+    // ===================================================
+    "debug.javascript.codelens.npmScripts": "never",
+    "debug.onTaskErrors": "debugAnyway",
+    "debug.showInlineBreakpointCandidates": false,
+
+    // ===================================================
+    // NOTEBOOKS / JUPYTER
+    // ===================================================
+    "jupyter.askForKernelRestart": false,
+    "notebook.output.fontSize": 12,
+    "notebook.output.lineHeight": 1.2,
+    "notebook.output.textLineLimit": 100,
+
+    // ===================================================
+    // COPILOT / AI CHAT
+    // ===================================================
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "chat.editor.fontFamily": "Operator Mono", // [USER-SPECIFIC] Operator Mono is a paid font
+    "chat.editor.fontSize": 14,
+    "inlineChat.enableV2": true,
+    "chat.autopilot.enabled": true,
+    "chat.agent.maxRequests": 100,
+    "chat.notifyWindowOnConfirmation": "off",
+    "chat.viewSessions.orientation": "stacked",
+    "chat.imageCarousel.enabled": true,
+    "chat.tools.terminal.enforceTimeoutFromModel": false,
+    // [USER-SPECIFIC] Enable MCP discovery for the AI tools you have installed locally
+    "chat.mcp.discovery.enabled": {
+        "claude-desktop": true,
+        "windsurf": true,
+        "cursor-global": true,
+        "cursor-workspace": true
+    },
+    "chat.mcp.gallery.enabled": true,
+
+    // ===================================================
+    // EXTENSIONS
+    // ===================================================
+    "extensions.autoUpdate": false,
+    "extensions.autoCheckUpdates": false,
     "extensions.ignoreRecommendations": true,
-    "vscode_custom_css.imports": [
-        "file:///Users/saiguy/.vscode/style.css"
-    ],
-    // ===================================
-    // Security
-    // ===================================
+    "redhat.telemetry.enabled": true,
+
+    // ===================================================
+    // SECURITY
+    // ===================================================
     "security.promptForLocalFileProtocolHandling": false,
     "security.workspace.trust.untrustedFiles": "open",
-    // ===================================
-    // Windsurf
-    // ===================================
-    "windsurf.enableTabToJump": false,
-    "windsurf.enableConfig": {
-        "*": true
-    },
-    // ===================================
-    // Other
-    // ===================================
-    "azureResourceGroups.selectedSubscriptions": [],
-    "liveServer.settings.donotShowInfoMsg": true,
+
+    // ===================================================
+    // TELEMETRY
+    // ===================================================
+    "telemetry.feedback.enabled": false,
+
+    // ===================================================
+    // SPELL CHECK
+    // [PROJECT-SPECIFIC] Domain terms for this codebase
+    // ===================================================
+    "cSpell.userWords": [
+    ],
+
+    // ===================================================
+    // EXTENSION-SPECIFIC
+    // ===================================================
+
+    // GitHub Pull Requests
+    "githubPullRequests.pullBranch": "never",
+
+    // vsintellicode [USER-SPECIFIC: requires IntelliCode extension]
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "cursor.cpp.enablePartialAccepts": true
+
+    // VisualVM [MACHINE-SPECIFIC] update to match local VisualVM install path
+    "visualvm.installation.visualvmPath": "/Applications/VisualVM.app",
+
+    // ===================================================
+    // EXPLORER
+    // ===================================================
+    "explorer.confirmPasteNative": false,
+
+    // ===================================================
+    // COPILOT TERMINAL AUTO-APPROVE
+    // Safe read-only commands are pre-approved; destructive ops default to false.
+    // [MACHINE-SPECIFIC] The absolute .venv path and build-scripts entry below
+    //   are local to this machine/project — update or remove when sharing.
+    // ===================================================
+    "chat.tools.terminal.autoApprove": {
+        // ---- Unix file system utilities ----
+        "cat": true,
+        "cd": true,
+        "cmp": true,
+        "cut": true,
+        "date": true,
+        "/^date\\b.*\\s(-s|--set)\\b/": false,
+        "df": true,
+        "dir": true,
+        "du": true,
+        "echo": true,
+        "file": true,
+        "find": true,
+        "/^find\\b.*\\s-(delete|exec|execdir|fprint|fprintf|fls|ok|okdir)\\b/": false,
+        "grep": true,
+        "head": true,
+        "ls": true,
+        "nl": true,
+        "od": true,
+        "pwd": true,
+        "read": true,
+        "realpath": true,
+        "readlink": true,
+        "sleep": true,
+        "sort": true,
+        "/^sort\\b.*\\s-(o|S)\\b/": false,
+        "stat": true,
+        "tail": true,
+        "tr": true,
+        "tree": true,
+        "/^tree\\b.*\\s-o\\b/": false,
+        "wc": true,
+        "which": true,
+        "basename": true,
+        "dirname": true,
+        "findstr": true,
+        "column": true,
+        "/^column\\b.*\\s-c\\s+[0-9]{4,}/": false,
+        // ---- Text processing ----
+        "rg": true,
+        "/^rg\\b.*\\s(--pre|--hostname-bin)\\b/": false,
+        "sed": true,
+        "/^sed\\b.*\\s(-[a-zA-Z]*(e|f)[a-zA-Z]*|--expression|--file)\\b/": false,
+        "/^sed\\b.*s\\/.*\\/.*\\/[ew]/": false,
+        "/^sed\\b.*;W/": false,
+        "jq": true,
+        "xargs": true,
+        // ---- Binary inspection ----
+        "/^xxd$/": true,
+        "/^xxd\\b(\\s+-\\S+)*\\s+[^-\\s]\\S*$/": true,
+        // ---- File operations (destructive — require confirmation) ----
+        "mkdir": true,
+        "mv": true,
+        "rm": true,
+        "rmdir": true,
+        "chmod": true,
+        "chown": true,
+        "dd": false,
+        "eval": false,
+        // ---- Process management ----
+        "kill": true,
+        "ps": true,
+        "top": true,
+        // ---- Network / HTTP ----
+        "curl": true,
+        "wget": true,
+        // ---- Git (read-only operations) ----
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+status\\b/": true,
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+log\\b/": true,
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+show\\b/": true,
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+diff\\b/": true,
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+ls-files\\b/": true,
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+grep\\b/": true,
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+branch\\b/": true,
+        "/^git(\\s+(-C\\s+\\S+|--no-pager))*\\s+branch\\b.*\\s-(d|D|m|M|-delete|-force)\\b/": false,
+        // ---- Docker (read-only operations) ----
+        "/^docker\\s+(ps|images|info|version|inspect|logs|top|stats|port|diff|search|events)\\b/": true,
+        "/^docker\\s+(container|image|network|volume|context|system)\\s+(ls|ps|inspect|history|show|df|info)\\b/": true,
+        "/^docker\\s+compose\\s+(ps|ls|top|logs|images|config|version|port|events)\\b/": true,
+        // ---- npm / yarn / pnpm (read-only operations) ----
+        "/^npm\\s+(ls|list|outdated|view|info|show|explain|why|root|prefix|bin|search|doctor|fund|repo|bugs|docs|home|help(-search)?)\\b/": true,
+        "/^npm\\s+config\\s+(list|get)\\b/": true,
+        "/^npm\\s+pkg\\s+get\\b/": true,
+        "/^npm\\s+audit$/": true,
+        "/^npm\\s+cache\\s+verify\\b/": true,
+        "npm ci": true,
+        "/^yarn\\s+(list|outdated|info|why|bin|help|versions)\\b/": true,
+        "/^yarn\\s+licenses\\b/": true,
+        "/^yarn\\s+audit\\b(?!.*\\bfix\\b)/": true,
+        "/^yarn\\s+config\\s+(list|get)\\b/": true,
+        "/^yarn\\s+cache\\s+dir\\b/": true,
+        "/^yarn\\s+install\\s+--frozen-lockfile\\b/": true,
+        "/^pnpm\\s+(ls|list|outdated|why|root|bin|doctor)\\b/": true,
+        "/^pnpm\\s+licenses\\b/": true,
+        "/^pnpm\\s+audit\\b(?!.*\\bfix\\b)/": true,
+        "/^pnpm\\s+config\\s+(list|get)\\b/": true,
+        "/^pnpm\\s+install\\s+--frozen-lockfile\\b/": true,
+        // ---- PowerShell (Windows) ----
+        "Get-ChildItem": true,
+        "Get-Content": true,
+        "Get-Date": true,
+        "Get-Random": true,
+        "Get-Location": true,
+        "Set-Location": true,
+        "Write-Host": true,
+        "Write-Output": true,
+        "Out-String": true,
+        "Split-Path": true,
+        "Join-Path": true,
+        "Start-Sleep": true,
+        "Where-Object": true,
+        "/^Select-[a-z0-9]/i": true,
+        "/^Measure-[a-z0-9]/i": true,
+        "/^Compare-[a-z0-9]/i": true,
+        "/^Format-[a-z0-9]/i": true,
+        "/^Sort-[a-z0-9]/i": true,
+        "del": true,
+        "Remove-Item": true,
+        "ri": true,
+        "rd": true,
+        "erase": true,
+        "Stop-Process": true,
+        "spps": true,
+        "taskkill": true,
+        "taskkill.exe": true,
+        "Invoke-RestMethod": true,
+        "Invoke-WebRequest": true,
+        "irm": true,
+        "iwr": true,
+        "Set-ItemProperty": true,
+        "sp": true,
+        "Set-Acl": true,
+        "Invoke-Expression": false,
+        "iex": false
+    }
 }
