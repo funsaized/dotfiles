@@ -7,194 +7,552 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "features": {
-    "edit_prediction_provider": "zed"
-  },
-  "icon_theme": "Catppuccin Latte",
-  "agent": {
-    "always_allow_tool_actions": true,
-    "default_profile": "ask",
-    "default_model": {
-      "provider": "copilot_chat",
-      "model": "gemini-2.5-pro"
+    // ── AI / Agent ────────────────────────────────────────────────────────────
+    "disable_ai": false,
+    "edit_predictions": {
+        "provider": "zed",
     },
-    "play_sound_when_agent_done": true
-  },
-  "base_keymap": "Cursor",
-  "ui_font_size": 16,
-  "ui_font_family": "Operator Mono",
-  "ui_font_weight": 300,
-  "buffer_font_size": 16,
-  "buffer_font_family": "Operator Mono Lig",
-  "buffer_line_height": {
-    "custom": 1.6
-  },
-  "theme": {
-    "mode": "system",
-    "light": "Catppuccin Mocha",
-    "dark": "Catppuccin Mocha"
-  },
-  "terminal": {
-    "font_family": "Operator Mono Lig",
-    "font_size": 16,
-    "shell": {
-      "program": "zsh"
-    },
-    "working_directory": "current_project_directory",
-    "env": {
-      "TERM": "xterm-256color"
-    }
-  },
-  "project_panel": {
-    "dock": "right"
-  },
-  // Hide tab bar completely for a single-tab experience
-  "tab_bar": {
-    "show": false
-  },
-  "file_scan_exclusions": [
-    // Dependencies
-    "**/node_modules",
-    "**/bower_components",
-    "**/vendor",
-    "**/.pnp",
-    "**/.pnp.js",
-
-    // Build outputs
-    "**/dist",
-    "**/build",
-    "**/out",
-    "**/.next",
-    "**/.nuxt",
-    "**/.output",
-    "**/target",
-
-    // Cache directories
-    "**/.cache",
-    "**/.turbo",
-    "**/.parcel-cache",
-    "**/.webpack-cache",
-    "**/eslintcache",
-
-    // Test artifacts
-    "**/coverage",
-    "**/.nyc_output",
-    "**/test-results",
-
-    // Large generated files
-    "**/*.min.js",
-    "**/*.min.css",
-    "**/bundle.js",
-    "**/*-lock.json",
-    "**/*.map",
-    "**/package-lock.json",
-
-    // Environment and logs
-    "**/.env.local",
-    "**/.env.*.local",
-    "**/logs",
-    "**/*.log",
-
-    // IDE/Editor
-    "**/.idea",
-    "**/.vscode",
-    "**/*.swp",
-    "**/*.swo"
-  ],
-
-  "lsp": {
-    "typescript-language-server": {
-      "settings": {
-        "typescript": {
-          "suggest": {
-            "autoImports": true
-          },
-          "preferences": {
-            "importModuleSpecifier": "relative"
-          }
-        }
-      }
-    },
-    "eslint": {
-      "settings": {
-        "codeActionOnSave": {
-          "rules": ["import/order"]
+    "agent_servers": {
+        "opencode": {
+            "type": "registry",
         },
-        "rulesCustomizations": [
-          {
-            "rule": "*",
-            "severity": "warn"
-          }
+        "your_agent": {
+            "type": "custom",
+            "command": "path_to_executable",
+        },
+    },
+    "agent": {
+        "default_profile": "ask",
+        "default_model": {
+            "provider": "anthropic",
+            "model": "claude-sonnet-4-6-latest",
+        },
+        "play_sound_when_agent_done": true,
+        "tool_permissions": {
+            "default": "allow",
+        },
+        "inline_assistant_model": {
+            "provider": "copilot_chat",
+            "model": "gpt-5.1-codex-max",
+            "enable_thinking": false,
+        },
+        "profiles": {
+            "descriptive": {
+                "default_model": {
+                    "provider": "copilot_chat",
+                    "model": "gpt-5.2",
+                    "enable_thinking": false,
+                },
+                "name": "Descriptive",
+                "tools": {},
+                "enable_all_context_servers": false,
+                "context_servers": {},
+            },
+        },
+        "favorite_models": [
+            {
+                "provider": "copilot_chat",
+                "model": "gpt-5.1-codex-max",
+                "enable_thinking": false,
+            },
+            {
+                "provider": "copilot_chat",
+                "model": "claude-sonnet-4.5",
+                "enable_thinking": false,
+            },
+            {
+                "provider": "copilot_chat",
+                "model": "claude-opus-4.6",
+                "enable_thinking": false,
+            },
+            {
+                "provider": "copilot_chat",
+                "model": "gpt-5.4",
+                "enable_thinking": false,
+            },
         ],
-        "workingDirectory": {
-          "mode": "auto"
-        }
-      }
-    }
-  },
+        "model_parameters": [],
+    },
+    "agent_buffer_font_size": 12.0,
+    "agent_ui_font_size": 15,
 
-  // Prettier formatting configuration
-  "format_on_save": "on",
-  "formatter": "prettier",
-  "prettier": {
-    "allowed": true,
-    "package_manager": "yarn"
-  },
-  "languages": {
-    "JavaScript": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+    // ── Fonts ─────────────────────────────────────────────────────────────────
+    "ui_font_family": "Operator Mono Lig",
+    "ui_font_size": 16.0,
+    "ui_font_weight": 450,
+    "buffer_font_family": "Operator Mono Lig",
+    "buffer_font_size": 16.0,
+    "buffer_font_weight": 400,
+    "buffer_line_height": {
+        "custom": 1.6,
     },
-    "TypeScript": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+
+    // ── Theme & Appearance ────────────────────────────────────────────────────
+    "theme": {
+        "mode": "system",
+        "light": "Catppuccin Iced Latte (Blur)",
+        "dark": "Vesper Blur",
     },
-    "TSX": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+    "icon_theme": {
+        "mode": "system",
+        "light": "Base Charmed Icons",
+        "dark": "Soft Charmed Icons",
     },
-    "JSON": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+    "theme_overrides": {
+        "Vesper Blur": {
+            "syntax": {
+                "comment": {
+                    "font_style": "italic",
+                },
+                "comment.doc": {
+                    "font_style": "italic",
+                },
+                "keyword": {
+                    "font_style": "italic",
+                },
+                "type.keyword": {
+                    "font_style": "italic",
+                },
+                "variable.special": {
+                    "font_style": "italic",
+                },
+                "variable.parameter": {
+                    "font_style": "italic",
+                },
+                "attribute": {
+                    "font_style": "italic",
+                },
+                "type": {
+                    "font_style": "italic",
+                },
+                "keyword.import": {
+                    "font_style": "italic",
+                },
+                "attribute.decorator": {
+                    "font_style": "italic",
+                },
+                "string.escape": {
+                    "font_style": "italic",
+                },
+            },
+        },
+        "Catppuccin Iced Latte (Blur)": {
+            "syntax": {
+                "comment": {
+                    "font_style": "italic",
+                },
+                "comment.doc": {
+                    "font_style": "italic",
+                },
+                "keyword": {
+                    "font_style": "italic",
+                },
+                "type.keyword": {
+                    "font_style": "italic",
+                },
+                "variable.special": {
+                    "font_style": "italic",
+                },
+                "variable.parameter": {
+                    "font_style": "italic",
+                },
+                "attribute": {
+                    "font_style": "italic",
+                },
+                "type": {
+                    "font_style": "italic",
+                },
+                "keyword.import": {
+                    "font_style": "italic",
+                },
+                "attribute.decorator": {
+                    "font_style": "italic",
+                },
+                "string.escape": {
+                    "font_style": "italic",
+                },
+            },
+        },
     },
-    "CSS": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+    "text_rendering_mode": "platform_default",
+
+    // ── Editor ────────────────────────────────────────────────────────────────
+    "base_keymap": "Cursor",
+    "cursor_blink": true,
+    "cursor_shape": "underline",
+    "current_line_highlight": "all",
+    "colorize_brackets": true,
+    "soft_wrap": "none",
+    "tab_size": 4,
+    "show_wrap_guides": true,
+    "indent_guides": {
+        "coloring": "fixed",
+        "background_coloring": "disabled",
     },
-    "SCSS": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+    "inlay_hints": {
+        "show_background": false,
+        "enabled": false,
     },
-    "HTML": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+    "use_smartcase_search": true,
+    "restore_on_startup": "last_workspace",
+    "autosave": "on_focus_change",
+    "zoomed_padding": true,
+    "active_pane_modifiers": {},
+    "centered_layout": {
+        "right_padding": null,
+        "left_padding": null,
     },
-    "Markdown": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
-    }
-  }
+    "pane_split_direction_horizontal": "down",
+    "pane_split_direction_vertical": "right",
+
+    // ── Vim ───────────────────────────────────────────────────────────────────
+    "vim_mode": false,
+    "helix_mode": false,
+    "vim": {
+        "toggle_relative_line_numbers": false,
+    },
+
+    // ── Formatting ────────────────────────────────────────────────────────────
+    "format_on_save": "on",
+    "formatter": "prettier",
+    "prettier": {
+        "allowed": true,
+        "package_manager": "yarn",
+    },
+
+    // ── Languages ─────────────────────────────────────────────────────────────
+    "languages": {
+        "Python": {
+            "colorize_brackets": true,
+            "indent_guides": {
+                "background_coloring": "disabled",
+            },
+        },
+        "JavaScript": {
+            "colorize_brackets": true,
+            "indent_guides": {
+                "background_coloring": "disabled",
+            },
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true,
+            },
+        },
+        "TypeScript": {
+            "colorize_brackets": true,
+            "indent_guides": {
+                "background_coloring": "disabled",
+            },
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true,
+            },
+        },
+        "TSX": {
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true,
+            },
+        },
+        "C++": {
+            "colorize_brackets": true,
+        },
+        "JSON": {
+            "formatter": {
+                "external": {
+                    "command": "prettier",
+                    "arguments": [
+                        "--write",
+                        "--stdin-filepath",
+                        "{buffer_path}",
+                    ],
+                },
+            },
+        },
+        "CSS": {
+            "formatter": {
+                "external": {
+                    "command": "prettier",
+                    "arguments": [
+                        "--write",
+                        "--stdin-filepath",
+                        "{buffer_path}",
+                    ],
+                },
+            },
+        },
+        "SCSS": {
+            "formatter": {
+                "external": {
+                    "command": "prettier",
+                    "arguments": [
+                        "--write",
+                        "--stdin-filepath",
+                        "{buffer_path}",
+                    ],
+                },
+            },
+        },
+        "HTML": {
+            "formatter": {
+                "external": {
+                    "command": "prettier",
+                    "arguments": [
+                        "--write",
+                        "--stdin-filepath",
+                        "{buffer_path}",
+                    ],
+                },
+            },
+        },
+        "Markdown": {
+            "formatter": {
+                "external": {
+                    "command": "prettier",
+                    "arguments": [
+                        "--write",
+                        "--stdin-filepath",
+                        "{buffer_path}",
+                    ],
+                },
+            },
+        },
+    },
+    "python": {
+        "enable_every_time": {
+            "enable_every_time_project_has_local_venv": true,
+        },
+    },
+
+    // ── LSP ───────────────────────────────────────────────────────────────────
+    "lsp": {
+        "typescript-language-server": {
+            "settings": {
+                "typescript": {
+                    "suggest": {
+                        "autoImports": true,
+                    },
+                    "preferences": {
+                        "importModuleSpecifier": "relative",
+                    },
+                },
+            },
+        },
+        "eslint": {
+            "settings": {
+                "codeActionOnSave": {
+                    "rules": ["import/order"],
+                },
+                "rulesCustomizations": [
+                    {
+                        "rule": "*",
+                        "severity": "warn",
+                    },
+                ],
+                "workingDirectory": {
+                    "mode": "auto",
+                },
+            },
+        },
+    },
+
+    // ── Terminal ──────────────────────────────────────────────────────────────
+    "terminal": {
+        "font_family": "Operator Mono Lig",
+        "font_size": 16,
+        "font_weight": 400,
+        "shell": "system",
+        "working_directory": "current_project_directory",
+        "dock": "bottom",
+        "default_height": 320,
+        "option_as_meta": false,
+        "blinking": "terminal_controlled",
+        "cursor_shape": "underline",
+        "keep_selection_on_copy": false,
+        "scrollbar": {
+            "show": "always",
+        },
+        "toolbar": {
+            "breadcrumbs": false,
+        },
+        "button": true,
+        "env": {
+            "TERM": "xterm-256color",
+        },
+    },
+
+    // ── UI Panels & Chrome ────────────────────────────────────────────────────
+    "window_decorations": "client",
+    "use_system_window_tabs": false,
+    "bottom_dock_layout": "contained",
+    "project_panel": {
+        "dock": "right",
+        "hide_hidden": false,
+        "sticky_scroll": true,
+        "scrollbar": {
+            "show": "auto",
+        },
+        "indent_size": 12,
+        "folder_icons": false,
+        "entry_spacing": "comfortable",
+        "hide_root": false,
+        "git_status": true,
+        "file_icons": true,
+        "button": true,
+        "hide_gitignore": false,
+    },
+    "tab_bar": {
+        "show": true,
+        "show_pinned_tabs_in_separate_row": false,
+        "show_tab_bar_buttons": true,
+        "show_nav_history_buttons": true,
+    },
+    "tabs": {
+        "show_diagnostics": "all",
+        "show_close_button": "hover",
+        "close_position": "left",
+        "file_icons": true,
+        "git_status": true,
+    },
+    "toolbar": {
+        "code_actions": true,
+        "breadcrumbs": true,
+    },
+    "title_bar": {
+        "show_onboarding_banner": true,
+        "show_project_items": true,
+        "show_branch_name": true,
+        "show_menus": false,
+        "show_sign_in": true,
+        "show_user_picture": true,
+        "show_branch_icon": true,
+    },
+    "status_bar": {
+        "cursor_position_button": true,
+        "active_language_button": true,
+    },
+    "minimap": {
+        "thumb": "always",
+        "max_width_columns": 90,
+        "display_in": "all_editors",
+        "show": "always",
+    },
+    "outline_panel": {
+        "button": true,
+    },
+    "notification_panel": {
+        "button": true,
+    },
+    "preview_tabs": {
+        "enable_preview_from_file_finder": true,
+    },
+    "debugger": {
+        "button": true,
+    },
+    "search": {
+        "regex": true,
+        "button": true,
+    },
+    "diagnostics": {
+        "button": true,
+    },
+
+    // ── Git ───────────────────────────────────────────────────────────────────
+    "git": {
+        "branch_picker": {
+            "show_author_name": true,
+        },
+        "inline_blame": {
+            "show_commit_summary": true,
+        },
+    },
+    "git_panel": {
+        "sort_by_path": false,
+        "status_style": "label_color",
+        "tree_view": true,
+        "collapse_untracked_diff": false,
+    },
+
+    // ── Context Servers (MCP) ─────────────────────────────────────────────────
+    "context_servers": {
+        "mcp-zomato": {
+            "settings": {},
+            "enabled": true,
+            "url": "https://mcp-server.zomato.com/mcp",
+        },
+        "kite-zerodha-mcp": {
+            "settings": {},
+            "enabled": true,
+            "url": "https://mcp.kite.trade/mcp",
+        },
+        "mcp-server-github": {
+            "enabled": true,
+            "settings": {
+                "github_personal_access_token": "your access token",
+            },
+        },
+    },
+
+    // ── Features ──────────────────────────────────────────────────────────────
+    "features": {
+        "notebooks": true,
+    },
+
+    // ── Calls ─────────────────────────────────────────────────────────────────
+    "calls": {
+        "mute_on_join": true,
+    },
+
+    // ── Telemetry ─────────────────────────────────────────────────────────────
+    "telemetry": {
+        "diagnostics": false,
+        "metrics": false,
+    },
+
+    // ── WSL ───────────────────────────────────────────────────────────────────
+    "wsl_connections": [
+        {
+            "distro_name": "Ubuntu",
+            "user": null,
+            "projects": [
+                {
+                    "paths": ["/home/daksh"],
+                },
+            ],
+        },
+    ],
+
+    // ── File Scanning ─────────────────────────────────────────────────────────
+    "file_scan_exclusions": [
+        "**/node_modules",
+        "**/bower_components",
+        "**/vendor",
+        "**/.pnp",
+        "**/.pnp.js",
+        "**/dist",
+        "**/build",
+        "**/out",
+        "**/.next",
+        "**/.nuxt",
+        "**/.output",
+        "**/target",
+        "**/.cache",
+        "**/.turbo",
+        "**/.parcel-cache",
+        "**/.webpack-cache",
+        "**/eslintcache",
+        "**/coverage",
+        "**/.nyc_output",
+        "**/test-results",
+        "**/*.min.js",
+        "**/*.min.css",
+        "**/bundle.js",
+        "**/*-lock.json",
+        "**/*.map",
+        "**/package-lock.json",
+        "**/.env.local",
+        "**/.env.*.local",
+        "**/logs",
+        "**/*.log",
+        "**/.idea",
+        "**/*.swp",
+        "**/*.swo",
+    ],
 }
