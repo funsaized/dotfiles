@@ -491,21 +491,19 @@
 
     // ── Context Servers (MCP) ─────────────────────────────────────────────────
     "context_servers": {
+        "mcp-server-context7": {
+            "enabled": true,
+            "remote": false,
+            "settings": {
+                "context7_api_key": "YOUR TOKEN HERE"
+            }
+        },
         "mcp-server-github": {
             "enabled": true,
             "remote": false,
             "settings": {
                 "github_personal_access_token": "YOU PAT HERE",
             },
-        },
-        "mcp-server-filesystem": {
-            "enabled": true,
-            "settings": {
-                "allowed_directories": ["/Users/saiguy/Documents/programming"],
-            },
-        },
-        "mcp-server-fetch": {
-            "enabled": true,
         },
     },
 
