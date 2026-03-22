@@ -84,7 +84,7 @@
     "ui_font_family": ".ZedSans",
     "buffer_font_family": "Operator Mono SSm Lig",
     "buffer_font_size": 16.0,
-    "buffer_font_weight": 500,
+    "buffer_font_weight": 400,
     "buffer_line_height": "comfortable",
 
     // ── Theme & Appearance ────────────────────────────────────────────────────
