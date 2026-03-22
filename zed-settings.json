@@ -24,8 +24,9 @@
     "agent": {
         "default_profile": "ask",
         "default_model": {
+            "enable_thinking": true,
             "provider": "anthropic",
-            "model": "claude-sonnet-4-6-latest",
+            "model": "claude-sonnet-4-6-thinking-latest",
         },
         "play_sound_when_agent_done": true,
         "tool_permissions": {
@@ -73,19 +74,18 @@
         ],
         "model_parameters": [],
     },
-    "agent_buffer_font_size": 12.0,
+    "agent_buffer_font_size": 14.0,
     "agent_ui_font_size": 15,
 
     // ── Fonts ─────────────────────────────────────────────────────────────────
-    "ui_font_family": "Operator Mono Lig",
+    // "ui_font_family": "Operator Mono Lig",
     "ui_font_size": 16.0,
     "ui_font_weight": 450,
+    "ui_font_family": ".ZedSans",
     "buffer_font_family": "Operator Mono Lig",
     "buffer_font_size": 16.0,
     "buffer_font_weight": 400,
-    "buffer_line_height": {
-        "custom": 1.6,
-    },
+    "buffer_line_height": "comfortable",
 
     // ── Theme & Appearance ────────────────────────────────────────────────────
     "theme": {
@@ -185,19 +185,26 @@
     "soft_wrap": "none",
     "tab_size": 4,
     "show_wrap_guides": true,
+    "wrap_guides": [80, 100, 120],
     "indent_guides": {
         "coloring": "fixed",
         "background_coloring": "disabled",
     },
     "inlay_hints": {
+        "enabled": true,
         "show_background": false,
-        "enabled": false,
+        "edit_debounce_ms": 700,
+        "scroll_debounce_ms": 50,
     },
     "use_smartcase_search": true,
     "restore_on_startup": "last_workspace",
     "autosave": "on_focus_change",
+    "linked_edits": true,
     "zoomed_padding": true,
-    "active_pane_modifiers": {},
+    "active_pane_modifiers": {
+        "inactive_opacity": 0.75,
+        "border_size": 1.0,
+    },
     "centered_layout": {
         "right_padding": null,
         "left_padding": null,
@@ -217,7 +224,7 @@
     "formatter": "prettier",
     "prettier": {
         "allowed": true,
-        "package_manager": "yarn",
+        "package_manager": "npm",
     },
 
     // ── Languages ─────────────────────────────────────────────────────────────
@@ -229,6 +236,7 @@
             },
         },
         "JavaScript": {
+            "tab_size": 2,
             "colorize_brackets": true,
             "indent_guides": {
                 "background_coloring": "disabled",
@@ -238,6 +246,7 @@
             },
         },
         "TypeScript": {
+            "tab_size": 2,
             "colorize_brackets": true,
             "indent_guides": {
                 "background_coloring": "disabled",
@@ -247,6 +256,8 @@
             },
         },
         "TSX": {
+            "tab_size": 2,
+            "colorize_brackets": true,
             "code_actions_on_format": {
                 "source.fixAll.eslint": true,
             },
@@ -255,6 +266,7 @@
             "colorize_brackets": true,
         },
         "JSON": {
+            "tab_size": 2,
             "formatter": {
                 "external": {
                     "command": "prettier",
@@ -326,12 +338,15 @@
         "typescript-language-server": {
             "settings": {
                 "typescript": {
-                    "suggest": {
-                        "autoImports": true,
+                    "inlayHints": {
+                        "parameterNames": { "enabled": "literals" },
+                        "parameterTypes": { "enabled": true },
+                        "variableTypes": { "enabled": true },
+                        "returnTypes": { "enabled": true },
+                        "enumMemberValues": { "enabled": true },
                     },
-                    "preferences": {
-                        "importModuleSpecifier": "relative",
-                    },
+                    "suggest": { "autoImports": true },
+                    "preferences": { "importModuleSpecifier": "non-relative" },
                 },
             },
         },
@@ -450,6 +465,7 @@
         "regex": true,
         "button": true,
     },
+    "seed_search_query_from_cursor": "always",
     "diagnostics": {
         "button": true,
     },
@@ -460,7 +476,10 @@
             "show_author_name": true,
         },
         "inline_blame": {
+            "enabled": true,
             "show_commit_summary": true,
+            "min_column": 80,
+            "delay_ms": 600,
         },
     },
     "git_panel": {
@@ -472,27 +491,22 @@
 
     // ── Context Servers (MCP) ─────────────────────────────────────────────────
     "context_servers": {
-        "mcp-zomato": {
-            "settings": {},
-            "enabled": true,
-            "url": "https://mcp-server.zomato.com/mcp",
-        },
-        "kite-zerodha-mcp": {
-            "settings": {},
-            "enabled": true,
-            "url": "https://mcp.kite.trade/mcp",
-        },
         "mcp-server-github": {
             "enabled": true,
+            "remote": false,
             "settings": {
-                "github_personal_access_token": "your access token",
+                "github_personal_access_token": "YOU PAT HERE",
             },
         },
-    },
-
-    // ── Features ──────────────────────────────────────────────────────────────
-    "features": {
-        "notebooks": true,
+        "mcp-server-filesystem": {
+            "enabled": true,
+            "settings": {
+                "allowed_directories": ["/Users/saiguy/Documents/programming"],
+            },
+        },
+        "mcp-server-fetch": {
+            "enabled": true,
+        },
     },
 
     // ── Calls ─────────────────────────────────────────────────────────────────
@@ -505,19 +519,6 @@
         "diagnostics": false,
         "metrics": false,
     },
-
-    // ── WSL ───────────────────────────────────────────────────────────────────
-    "wsl_connections": [
-        {
-            "distro_name": "Ubuntu",
-            "user": null,
-            "projects": [
-                {
-                    "paths": ["/home/daksh"],
-                },
-            ],
-        },
-    ],
 
     // ── File Scanning ─────────────────────────────────────────────────────────
     "file_scan_exclusions": [
