@@ -8,6 +8,18 @@ These are battle-tested settings from daily use. Every decision is intentional a
 
 ```
 dotfiles/
+├── claude/
+│   └── skills/
+│       └── notebooklm/          # Claude Code skill — NotebookLM bridge
+│           ├── SKILL.md
+│           ├── scripts/
+│           │   └── load_channel.py
+│           └── workflows/
+│               ├── add-source.md
+│               ├── ask.md
+│               ├── auth.md
+│               ├── manage.md
+│               └── youtube-channel.md
 ├── vscode/
 │   └── settings.json    # VS Code user settings (~490 lines)
 ├── zed/
@@ -15,7 +27,7 @@ dotfiles/
 └── README.md
 ```
 
-Both files are heavily commented with section headers and `[USER-SPECIFIC]` / `[MACHINE-SPECIFIC]` tags so you know exactly what to change when copying to your own setup.
+Both editor config files are heavily commented with section headers and `[USER-SPECIFIC]` / `[MACHINE-SPECIFIC]` tags so you know exactly what to change when copying to your own setup.
 
 ---
 
@@ -39,9 +51,38 @@ cp ~/.config/zed/settings.json ~/.config/zed/settings.json.bak
 cp zed/settings.json ~/.config/zed/settings.json
 ```
 
+### Quick Start — Claude Code Skills
+
+```bash
+# Copy the skills into your global Claude config
+cp -r claude/skills/* ~/.claude/skills/
+```
+
+Each skill is self-contained with a `SKILL.md` (the skill definition Claude reads) plus supporting scripts and workflow docs.
+
 ### Cherry-Pick Instead of Wholesale Copy
 
-Both files use section headers (`// ===` in VS Code, `// ──` in Zed) so you can grab individual blocks. Every section is self-contained — copy a block into your own settings and it just works.
+Both editor config files use section headers (`// ===` in VS Code, `// ──` in Zed) so you can grab individual blocks. Every section is self-contained — copy a block into your own settings and it just works.
+
+---
+
+## Claude Code Skills
+
+### notebooklm — NotebookLM Bridge
+
+Import any content into Google NotebookLM directly from Claude Code. A generalized fork of [ArtemXTech/personal-os-skills](https://github.com/ArtemXTech/personal-os-skills) with all Obsidian-specific functionality removed — this is a pure NotebookLM import/query bridge.
+
+**Supported sources**: YouTube channels (bulk load up to 300 episodes), individual YouTube videos, podcasts, webpages, PDFs, images, Google Docs/Slides, plain text.
+
+**What it does**:
+- Bulk-load entire YouTube channels into a notebook with one command
+- Add any URL or local file as a NotebookLM source
+- Query notebooks and get cited answers with `[N]` markers traced to exact source passages
+- Create and manage notebooks
+
+**Prerequisites**: `nlm` CLI (`uv tool install notebooklm-mcp-cli`) and `notebooklm-py` (`pip install "notebooklm-py[browser]"`). See [`claude/skills/notebooklm/SKILL.md`](claude/skills/notebooklm/SKILL.md) for full setup.
+
+**Trigger phrases**: "notebooklm", "load channel", "add to notebook", "notebooklm ask", "import into notebooklm"
 
 ---
 
