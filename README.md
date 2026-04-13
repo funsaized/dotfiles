@@ -70,7 +70,7 @@ Both editor config files use section headers (`// ===` in VS Code, `// ──` i
 
 ### notebooklm — NotebookLM Bridge
 
-Import any content into Google NotebookLM directly from Claude Code. A generalized fork of [ArtemXTech/personal-os-skills](https://github.com/ArtemXTech/personal-os-skills) with all Obsidian-specific functionality removed — this is a pure NotebookLM import/query bridge.
+Import any content into Google NotebookLM directly from Claude Code.
 
 **Supported sources**: YouTube channels (bulk load up to 300 episodes), individual YouTube videos, podcasts, webpages, PDFs, images, Google Docs/Slides, plain text.
 
