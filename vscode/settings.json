@@ -4,7 +4,7 @@
     // [USER-SPECIFIC] Operator Mono is a paid font;
     //   fallbacks (shareable): Fira Code, Menlo, Monaco, Courier New
     // ===================================================
-    "editor.fontFamily": "Operator Mono Lig, Operator Mono Book, Fira Code, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontFamily": "Operator Mono Lig, Operator Mono, Fira Code, Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     "editor.fontWeight": "400",
     "editor.fontSize": 16,
@@ -111,10 +111,35 @@
                 "settings": {
                     "fontStyle": "italic"
                 }
+            },
+            // Python: type hints, class names, and decorators
+            {
+                "scope": [
+                    "storage.type.annotation.python",
+                    "entity.name.type.class.python",
+                    "meta.function.decorator.python",
+                    "entity.name.function.decorator.python"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
             }
         ]
     },
     "editor.semanticTokenColorCustomizations": {
+        "[python]": {
+            "rules": {
+                "class": {
+                    "italic": true
+                },
+                "decorator": {
+                    "italic": true
+                },
+                "type": {
+                    "italic": true
+                }
+            }
+        },
         "rules": {
             "comment": {
                 "italic": true
@@ -168,7 +193,7 @@
     "java.import.gradle.java.home": "/opt/homebrew/Cellar/openjdk@21/21.0.7/libexec/openjdk.jdk/Contents/Home",
     "java.jdt.ls.java.home": "/opt/homebrew/Cellar/openjdk@21/21.0.7/libexec/openjdk.jdk/Contents/Home",
     // Tune heap bounds to your available RAM; Xmx12G requires ≥ 16 GB
-    "java.jdt.ls.vmargs": "-XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -Dsun.zip.disableMemoryMapping=true -Xmx12G -Xms1G",
+    "java.jdt.ls.vmargs": "-XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -Dsun.zip.disableMemoryMapping=true -Xmx12G -Xms1G -Djavax.net.ssl.trustStore=/opt/homebrew/Cellar/openjdk@21/21.0.7/libexec/openjdk.jdk/Contents/Home/lib/security/cacerts -Djavax.net.ssl.trustStorePassword=changeit",
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.workspaceCacheLimit": 200,
     "java.maxConcurrentBuilds": 4,
@@ -193,7 +218,7 @@
     // ===================================================
     "workbench.colorTheme": "Kanagawa",
     "workbench.iconTheme": "catppuccin-latte",
-    "workbench.editor.showTabs": "single",
+    "workbench.editor.showTabs": "multiple",
     "workbench.sideBar.location": "right",
     "workbench.startupEditor": "none",
     "workbench.list.smoothScrolling": true,
@@ -279,7 +304,7 @@
     // COPILOT / AI CHAT
     // ===================================================
     "github.copilot.nextEditSuggestions.enabled": true,
-    "chat.editor.fontFamily": "Operator Mono", // [USER-SPECIFIC] Operator Mono is a paid font
+    "chat.editor.fontFamily": "SF Pro", // [USER-SPECIFIC] Operator Mono is a paid font
     "chat.editor.fontSize": 14,
     "inlineChat.enableV2": true,
     "chat.autopilot.enabled": true,
@@ -482,5 +507,32 @@
         "Set-Acl": true,
         "Invoke-Expression": false,
         "iex": false
-    }
+    },
+    "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
+    "window.autoDetectColorScheme": true,
+    // "workbench.preferredLightColorTheme": "Solarized Light",
+    "workbench.preferredDarkColorTheme": "Kanagawa",
+    "chat.tools.urls.autoApprove": {
+        "https://code.visualstudio.com": true,
+        "https://github.com/microsoft/vscode/wiki/*": true,
+        "https://github.com": {
+            "approveRequest": false,
+            "approveResponse": true
+        },
+        "https://*.spring.io": true
+    },
+    "json.schemaDownload.trustedDomains": {
+        "https://developer.microsoft.com/json-schemas/": true,
+        "https://json-schema.org/": true,
+        "https://json.schemastore.org/": true,
+        "https://raw.githubusercontent.com/devcontainers/spec/": true,
+        "https://raw.githubusercontent.com/microsoft/vscode/": true,
+        "https://schemastore.azurewebsites.net/": true,
+        "https://turbo.build": true,
+        "https://www.schemastore.org/": true
+    },
+    "workbench.preferredLightColorTheme": "Kanagawa",
+    "chat.subagents.allowInvocationsFromSubagents": true,
+    "java.editor.reloadChangedSources": "auto",
+    "python.languageServer": "Default"
 }
