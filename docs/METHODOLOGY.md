@@ -145,10 +145,40 @@ vcs = "purple"
 
 **Rule: bind to the semantic layer that something else already maintains.**
 
-This is also why the terminal font list is `Operator Mono Lig` followed by
+This is also why the terminal font list is `Operator Mono SSm Lig` followed by
 `MesloLGS Nerd Font Mono`. Ghostty falls back per-codepoint, so text uses the
 editor's font and icons use the font that has icons — no compromise face, and
 it degrades to plain Meslo on a machine without the commercial font.
+
+### Corollary: enumerate the faces, don't assume the family
+
+The first version of this config used `Operator Mono Lig` — matching Zed — and
+set `font-thicken = true` to compensate for Operator being a light face.
+
+Both were wrong, and the terminal looked visibly chunky:
+
+```
+$ ghostty +list-fonts | grep -A5 '^Operator Mono Lig$'
+Operator Mono Lig
+  Operator Mono Lig Book
+  Operator Mono Lig Book Italic
+  Operator Mono Lig Light
+  Operator Mono Lig Light Italic     <- no Bold. none.
+```
+
+Terminals render far more bold than editors do — `eza` bolds directories,
+`ls -l` bolds permissions, `grep` bolds matches. With no bold face, every one of
+those was **synthesized** by dilating strokes. Then `font-thicken` dilated them
+again, at its default strength of `255` (the maximum), on a light background
+where thickening is already the wrong direction.
+
+`Operator Mono SSm Lig` — same foundry, same ligatures — ships real
+Book/Medium/Bold with italics for each, and SSm is the cut Hoefler designed for
+screens. It was installed the whole time.
+
+**Rule: a font family is not a font. Enumerate the faces before selecting one,
+especially for a bold-heavy surface like a terminal. And treat any "compensate
+for X" setting as a smell — check whether X is real first.**
 
 ---
 

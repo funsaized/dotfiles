@@ -31,16 +31,36 @@ theme = light:Catppuccin Latte,dark:Catppuccin Mocha
 # as a fallback — Ghostty walks this list per-codepoint. That's what renders
 # the `eza --icons` file icons and the starship prompt symbols.
 #
+# Use the SSm ("Screen Smart") + Lig cut specifically, NOT plain
+# `Operator Mono Lig`. Two reasons, both of which show up badly in a terminal:
+#
+#   1. Operator Mono Lig ships only Book and Light — there is NO bold face.
+#      Terminals render a LOT of bold (eza bolds directories, ls -l bolds
+#      permissions, grep bolds matches), so the renderer has to SYNTHESIZE
+#      bold by dilating the strokes. Synthetic bold looks clumsy and heavy.
+#      Operator Mono SSm Lig ships real Book/Medium/Bold + italics for each.
+#   2. SSm is Hoefler's screen-optimized cut — tighter sidebearings and
+#      hinting tuned for small sizes, i.e. exactly this use case.
+#
+# Verify what your machine actually has:  ghostty +list-fonts | grep -A8 Operator
+#
 # [USER-SPECIFIC] Don't own Operator Mono? Delete the next line. Meslo takes
 # over as primary and everything still works.
-font-family = Operator Mono Lig
+font-family = Operator Mono SSm Lig
 font-family = MesloLGS Nerd Font Mono
 
 font-size = 16
 
-# Operator Mono is a light-weight face and reads thin on a dark background at
-# terminal sizes. This thickens the stems back to editor-like weight.
-font-thicken = true
+# DELIBERATELY OFF. `font-thicken` defaults to strength 255 — the maximum —
+# and stacks on top of any synthetic bold, which is what made everything look
+# chunky. It is also backwards in light mode: dark-text-on-light already reads
+# heavier than light-on-dark, so thickening over-corrects.
+#
+# If the font reads thin for you in dark mode, don't just flip this to true —
+# enable it AND dial the strength down, e.g.
+#     font-thicken = true
+#     font-thicken-strength = 40
+font-thicken = false
 
 # Approximates Zed's `"buffer_line_height": "comfortable"`. Terminal cells are
 # tight by default (~1.2); this opens them up without wasting vertical space.

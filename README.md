@@ -84,9 +84,9 @@ both slots — that silently does nothing.
 #### Font stack, not a font compromise
 
 ```
-font-family = Operator Mono Lig
+font-family = Operator Mono SSm Lig
 font-family = MesloLGS Nerd Font Mono
-font-thicken = true
+font-thicken = false
 adjust-cell-height = 12%
 ```
 
@@ -94,9 +94,22 @@ Ghostty falls back **per codepoint**. Text renders in the editor's font; icons
 render in the font that has icons. No single-font compromise, and it degrades
 gracefully on a machine without Operator Mono.
 
-`font-thicken` exists because Operator is a light face that reads thin on a dark
-background at terminal sizes. `adjust-cell-height` approximates Zed's
-`"buffer_line_height": "comfortable"` — terminal cells are tighter by default.
+**Pick the cut with a real bold.** Plain `Operator Mono Lig` ships only Book and
+Light — *no bold face at all*. Terminals render a lot of bold (eza bolds
+directories, `ls -l` bolds permissions, grep bolds matches), so the renderer has
+to synthesize it by dilating strokes, which looks clumsy and heavy. The `SSm Lig`
+cut ships real Book/Medium/Bold plus italics for each, and SSm ("Screen Smart")
+is Hoefler's screen-optimized variant — tighter sidebearings, hinting tuned for
+small sizes. Check what you have with `ghostty +list-fonts | grep -A8 Operator`.
+
+**`font-thicken` is off on purpose.** It defaults to strength `255` — the
+maximum — and stacks on top of synthetic bold. It's also backwards in light
+mode, where dark-text-on-light already reads heavier. If text looks thin to you
+in dark mode, enable it *and* dial the strength down (`font-thicken-strength =
+40`), rather than flipping it on at full blast.
+
+`adjust-cell-height` approximates Zed's `"buffer_line_height": "comfortable"` —
+terminal cells are tighter by default.
 
 #### The one setting that fixes daily friction
 
