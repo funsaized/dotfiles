@@ -2,7 +2,7 @@
 
 A terminal and editor setup that behaves like **one environment** instead of four
 applications that happen to be open at once — same font, same palette, same
-light/dark switch, same muscle memory.
+theme, same muscle memory.
 
 Tuned for full-stack TypeScript / Java / Python with AI-assisted workflows on
 macOS. Every non-obvious line carries a comment explaining *why*, and the
@@ -71,20 +71,31 @@ Meslo takes over as the primary face — everything still works.
 Splitting settings across the two is how you edit a config and see no change.
 Everything lives in the former; `install.sh` neutralizes the latter.
 
-#### Theme follows the system
+#### Theme is pinned dark
+
+```
+theme = Catppuccin Mocha
+```
+
+Dark regardless of the macOS appearance, matching Zed — which is likewise pinned
+with `"theme": { "mode": "dark" }` rather than `"system"`. Light terminals are a
+worse reading surface here: dark-text-on-light renders visually heavier, which
+fights an already-light typeface, and the prompt's ANSI colors are tuned against
+a dark background.
+
+Ghostty *does* support following the system, if you'd rather:
 
 ```
 theme = light:Catppuccin Latte,dark:Catppuccin Mocha
 ```
 
-Pairs with Zed's theme block, so the editor and terminal flip together at dusk
-instead of clashing. A common mistake is `light:X,dark:X` with the same theme in
-both slots — that silently does nothing.
+If you use that form, note the common mistake — `light:X,dark:X` with the *same*
+theme in both slots silently does nothing.
 
 #### Font stack, not a font compromise
 
 ```
-font-family = Operator Mono SSm Lig
+font-family = Operator Mono Lig
 font-family = MesloLGS Nerd Font Mono
 font-thicken = false
 adjust-cell-height = 12%
@@ -92,15 +103,8 @@ adjust-cell-height = 12%
 
 Ghostty falls back **per codepoint**. Text renders in the editor's font; icons
 render in the font that has icons. No single-font compromise, and it degrades
-gracefully on a machine without Operator Mono.
-
-**Pick the cut with a real bold.** Plain `Operator Mono Lig` ships only Book and
-Light — *no bold face at all*. Terminals render a lot of bold (eza bolds
-directories, `ls -l` bolds permissions, grep bolds matches), so the renderer has
-to synthesize it by dilating strokes, which looks clumsy and heavy. The `SSm Lig`
-cut ships real Book/Medium/Bold plus italics for each, and SSm ("Screen Smart")
-is Hoefler's screen-optimized variant — tighter sidebearings, hinting tuned for
-small sizes. Check what you have with `ghostty +list-fonts | grep -A8 Operator`.
+gracefully on a machine without Operator Mono. Bold is handled separately —
+see the next section.
 
 **`font-thicken` is off on purpose.** It defaults to strength `255` — the
 maximum — and stacks on top of synthetic bold. It's also backwards in light
@@ -246,9 +250,10 @@ it renders**.
 ```
 
 **Colors are ANSI names, never hex.** The terminal's active palette owns the
-actual RGB, so when Ghostty flips Catppuccin Latte → Mocha the prompt re-colors
-itself for free. Hardcoded hex would be correct in exactly one of the two modes.
-A named palette keeps that readable:
+actual RGB. Change the Ghostty theme and the prompt re-colors itself for free —
+including if you switch back to a light/dark auto-switching theme, where
+hardcoded hex would be correct in exactly one of the two modes. A named palette
+keeps that readable:
 
 ```toml
 palette = "adaptive"
@@ -436,9 +441,9 @@ Settings needing local changes are tagged in the source:
 
 ## Philosophy
 
-1. **One environment, not four apps.** Font, palette, cursor, and light/dark
-   switch are shared across terminal and editors. Context switching should cost
-   nothing visually.
+1. **One environment, not four apps.** Font, palette, cursor, and theme are
+   shared across terminal and editors — all pinned to Catppuccin Mocha, not
+   following the system. Context switching should cost nothing visually.
 2. **Reduce noise, show signal.** Inlay hints on demand, dimmed inactive panes,
    `git_metrics` off, ten dead prompt modules deleted.
 3. **Italic = type-level.** Comments, types, interfaces, and decorators render

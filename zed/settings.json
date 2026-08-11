@@ -107,13 +107,18 @@
   "agent_ui_font_size": 18,
 
   // ── Fonts ─────────────────────────────────────────────────────────────────
-  // Deliberately the plain "Lig" cut here, NOT the "SSm Lig" cut the terminal
-  // uses. SSm is Hoefler's ScreenSmart family: sturdier stems and larger
-  // x-height, drawn to survive small text on LOW-resolution displays. On a
-  // Retina panel those compromises buy nothing and read as soft/blurry, so the
-  // original cut -- finer, more precisely defined stems -- is sharper here.
-  // Ghostty stays on SSm because terminals render far more bold, and plain
-  // "Lig" has no bold face to load. Different surfaces, different tradeoff.
+  // Same cut as ghostty/config, so code renders identically in both.
+  //
+  // Do NOT "upgrade" this to "Operator Mono SSm Lig". SSm is Hoefler's
+  // ScreenSmart family -- fatter stems and a taller x-height, drawn so glyphs
+  // survive on LOW-resolution displays. Its vertical metrics are identical to
+  // this cut while its glyphs are ~11% larger and ~11% heavier, so it packs
+  // more ink into the same line box and reads soft/blurry on a Retina panel.
+  // Its payoff needs a rasterizer that snaps stems to the pixel grid, which
+  // macOS stopped doing when it dropped subpixel AA in Mojave.
+  //
+  // Ghostty solves the missing-bold problem separately, by borrowing only the
+  // bold face from the non-ligature "Operator Mono" family (identical metrics).
   // "ui_font_family": "Operator Mono Lig",
   "ui_font_size": 16.0,
   "ui_font_weight": 450,

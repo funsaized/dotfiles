@@ -16,11 +16,17 @@
 
 
 # ── Theme ──────────────────────────────────────────────────────────────────
-# Follows the macOS system appearance. Pairs with the Zed theme block, so the
-# editor and terminal flip light/dark together instead of clashing at dusk.
+# Pinned to dark, regardless of the macOS system appearance. Matches Zed, which
+# is likewise pinned ("theme": { "mode": "dark" }) rather than set to "system".
 #
-# List all:  ghostty +list-themes
-theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+# This deliberately does NOT use the light:…,dark:… auto-switch form. Light
+# terminals are a worse reading surface for this setup: dark-text-on-light
+# renders visually heavier, which fights an already-light typeface, and the
+# ANSI-mapped prompt colors are tuned against a dark background.
+#
+# If you do want auto-switching:  theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+# List all themes:                ghostty +list-themes
+theme = Catppuccin Mocha
 
 
 # ── Typography ─────────────────────────────────────────────────────────────

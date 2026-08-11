@@ -127,10 +127,17 @@ The same control discipline exposed that `+show-config` silently **ignores**
 
 The prompt could have hardcoded Catppuccin Mocha hex values. It doesn't.
 
-Ghostty switches between Catppuccin Latte and Mocha with the macOS appearance.
-Hardcoded hex would be correct in exactly one of those modes. ANSI color names
-(`cyan`, `purple`, `red`) are resolved by the terminal's active palette, so the
-prompt re-colors itself for free when the theme flips.
+ANSI color names (`cyan`, `purple`, `red`) are resolved by the terminal's active
+palette, so retheming Ghostty re-colors the prompt for free — no second file to
+edit, and no chance of the two drifting apart.
+
+This mattered more than expected. The config originally used Ghostty's
+`light:…,dark:…` form to follow the macOS appearance, and hardcoded hex would
+have been correct in exactly one of those two modes. The theme was later pinned
+to dark because the light variant read badly — and the prompt needed no change
+at all, because it had never named a color the theme didn't own.
+
+**A decision that survives its own reversal was the right decision.**
 
 Starship palettes give this a readable name layer without giving up the
 indirection:

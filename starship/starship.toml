@@ -10,9 +10,9 @@
 #     or you're writing dead config.
 #
 #  2. Colors are ANSI names ("cyan", "purple"), never hex. The terminal theme
-#     owns the actual RGB. Ghostty flips Catppuccin Latte <-> Mocha with the
-#     macOS appearance, and ANSI names follow that flip for free. Hardcoded
-#     hex would look correct in exactly one of the two modes.
+#     owns the actual RGB, so retheming Ghostty re-colors this prompt for free
+#     — including if you ever switch to a light/dark auto-switching theme,
+#     where hardcoded hex would be correct in exactly one of the two modes.
 #
 #  3. Measure before claiming a perf win. Starship runs modules in PARALLEL,
 #     so an expensive module usually hides behind the others and total prompt
@@ -76,7 +76,7 @@ scan_timeout = 30
 
 # ── Semantic palette ───────────────────────────────────────────────────────
 # One place to retune every color. Values are ANSI names on purpose (see rule
-# 2 at the top) so the prompt tracks the terminal's light/dark theme.
+# 2 at the top) so the prompt tracks whatever theme the terminal is using.
 palette = "adaptive"
 
 [palettes.adaptive]
