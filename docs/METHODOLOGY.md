@@ -172,13 +172,45 @@ those was **synthesized** by dilating strokes. Then `font-thicken` dilated them
 again, at its default strength of `255` (the maximum), on a light background
 where thickening is already the wrong direction.
 
-`Operator Mono SSm Lig` — same foundry, same ligatures — ships real
-Book/Medium/Bold with italics for each, and SSm is the cut Hoefler designed for
-screens. It was installed the whole time.
+The first fix was to switch wholesale to `Operator Mono SSm Lig`, which does
+ship a real bold. **That was also wrong**, and it took the user's eye to catch
+it — the editor immediately looked blurry. Measuring the two files explained it:
+
+| | `Lig Book` | `SSm Lig Book` | Δ |
+|---|---:|---:|---:|
+| x-height | 490 | 544 | +11.0% |
+| advance width | 550 | 625 | +13.6% |
+| stem width (`l`) | 401 | 446 | +11.2% |
+| ascender / descender | 960 / −240 | 960 / −240 | **0%** |
+
+SSm is Hoefler's *ScreenSmart* cut — fatter stems and a taller x-height so
+glyphs survive being rasterized across very few pixels. The vertical metrics are
+identical, so at the same nominal size it packs ~11% larger, ~11% heavier glyphs
+into the same line box: denser text, more antialiased edge per stroke, soft
+rather than crisp. And its payoff depends on a rasterizer that snaps stems to
+the pixel grid — which macOS stopped doing when it dropped subpixel
+antialiasing in Mojave. All of the compromises, none of the benefit.
+
+The actual fix was narrower: keep `Operator Mono Lig` and borrow *only* the bold
+face from the non-ligature `Operator Mono` family, whose metrics are identical
+(x-height 490, cap 620, advance 550):
+
+```
+font-family      = Operator Mono Lig
+font-family-bold = Operator Mono
+font-style-bold  = Bold          # required — this family registers Bold as
+                                 # usWeightClass 400, not 700
+```
 
 **Rule: a font family is not a font. Enumerate the faces before selecting one,
-especially for a bold-heavy surface like a terminal. And treat any "compensate
-for X" setting as a smell — check whether X is real first.**
+especially for a bold-heavy surface like a terminal.**
+
+**Rule: fix the defect, not the neighbourhood.** The first fix swapped the
+entire typeface to solve a problem with one style. The scope of a fix should
+match the scope of the bug.
+
+**Rule: treat any "compensate for X" setting as a smell** — `font-thicken` was
+there to counteract a thinness that turned out to be synthetic bold.
 
 ---
 

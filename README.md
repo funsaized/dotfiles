@@ -111,11 +111,51 @@ in dark mode, enable it *and* dial the strength down (`font-thicken-strength =
 `adjust-cell-height` approximates Zed's `"buffer_line_height": "comfortable"` —
 terminal cells are tighter by default.
 
+#### Bold comes from a different family on purpose
+
+`Operator Mono Lig` ships **no bold face** — only Book and Light:
+
+```bash
+$ ghostty +list-fonts | grep -A4 '^Operator Mono Lig$'
+Operator Mono Lig
+  Operator Mono Lig Book
+  Operator Mono Lig Book Italic
+  Operator Mono Lig Light
+  Operator Mono Lig Light Italic     # <- no Bold. none.
+```
+
+Terminals render a *lot* of bold — eza bolds directories, `ls -l` bolds
+permissions, `grep` bolds matches — so without a real face all of it gets
+synthesized by dilating strokes, which looks clumsy and heavy.
+
+The fix borrows bold from the non-ligature `Operator Mono` family, whose metrics
+are **identical** to the Lig cut (x-height 490, cap height 620, advance 550 —
+measured from the `.otf` files), so bold text lines up perfectly:
+
+```
+font-family             = Operator Mono Lig
+font-family-bold        = Operator Mono
+font-style-bold         = Bold
+font-family-bold-italic = Operator Mono
+font-style-bold-italic  = Bold Italic
+```
+
+`font-style-bold` is **required**, not cosmetic. Hoefler registers this family's
+weights unusually — `Book` is `usWeightClass` 325 and `Bold` is 400, not the
+standard 700 — so weight matching alone will not find the bold face.
+
+Verify it resolved with Ghostty's own tool:
+
+```bash
+$ ghostty +show-face --string=A --style=bold
+U+41 « A » found in face "Operator Mono".
+```
+
 #### A note on font cuts
 
-The terminal uses `Operator Mono SSm Lig`; **Zed deliberately uses plain
-`Operator Mono Lig`**. Same foundry, different tradeoff, and it's worth knowing
-why before you "fix" the inconsistency.
+There is a third cut, `Operator Mono SSm Lig`, which also has a real bold — it
+looks like the obvious answer and **it isn't**. Worth knowing why before you
+"fix" anything here.
 
 Measured from the actual font files (both 1000 upem, both `usWeightClass` 400):
 
@@ -138,25 +178,14 @@ macOS hasn't done that since it dropped subpixel antialiasing in Mojave — it
 renders pure grayscale AA with no stem snapping. So on this hardware you inherit
 all of SSm's design compromises and none of its benefit.
 
-**It's still right for the terminal**, because there the competing defect is
-worse: plain `Operator Mono Lig` has no bold face, and a terminal renders bold
-constantly. Synthetic bold looks worse than slightly-soft real bold. An editor
-renders far less bold, so the tradeoff flips.
+This was tried as the terminal font, on the theory that a real bold beat a
+synthesized one. It does — but it trades a bold-weight problem for a
+whole-screen sharpness problem, which is a bad deal. Borrowing bold from the
+non-ligature `Operator Mono` family (above) fixes the bold without touching
+anything else, so that's what both surfaces use.
 
-If you'd rather have one cut everywhere, the non-ligature `Operator Mono` family
-has metrics *identical* to `Operator Mono Lig` (x-height 490, cap 620, advance
-550) **and** ships a real Bold — so it can supply the bold face without changing
-proportions:
-
-```
-font-family      = Operator Mono Lig
-font-family-bold = Operator Mono
-font-style-bold  = Bold
-```
-
-Caveat if you try it: Hoefler registers this family's weights unusually — `Book`
-is `usWeightClass` 325 and `Bold` is 400, not 700 — so specify `font-style-bold`
-explicitly rather than trusting weight matching.
+Both Ghostty and Zed therefore run `Operator Mono Lig` at 16 with identical
+metrics. Nothing to reconcile.
 
 #### The one setting that fixes daily friction
 
@@ -308,9 +337,8 @@ lives.
 
 ### Zed
 
-**Theme & type.** Catppuccin Latte / Mocha, Operator Mono Lig at 16 —
-deliberately a *different* cut from the terminal's, see
-[Font cuts](#a-note-on-font-cuts) — with
+**Theme & type.** Catppuccin Latte / Mocha, Operator Mono Lig at 16 — identical
+to the terminal, so code looks the same in both — with
 `theme_overrides` applying italic across ~11 syntax scopes — comments, keywords,
 types, decorators, parameters, escapes. With a font that has a true italic, this
 makes structure readable at a glance: *italic = type-level, upright =

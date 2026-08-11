@@ -31,23 +31,41 @@ theme = light:Catppuccin Latte,dark:Catppuccin Mocha
 # as a fallback — Ghostty walks this list per-codepoint. That's what renders
 # the `eza --icons` file icons and the starship prompt symbols.
 #
-# Use the SSm ("Screen Smart") + Lig cut specifically, NOT plain
-# `Operator Mono Lig`. Two reasons, both of which show up badly in a terminal:
+# Body text: the same cut Zed uses, so editor and terminal are pixel-identical.
+# Icons fall back to Meslo per-codepoint.
 #
-#   1. Operator Mono Lig ships only Book and Light — there is NO bold face.
-#      Terminals render a LOT of bold (eza bolds directories, ls -l bolds
-#      permissions, grep bolds matches), so the renderer has to SYNTHESIZE
-#      bold by dilating the strokes. Synthetic bold looks clumsy and heavy.
-#      Operator Mono SSm Lig ships real Book/Medium/Bold + italics for each.
-#   2. SSm is Hoefler's screen-optimized cut — tighter sidebearings and
-#      hinting tuned for small sizes, i.e. exactly this use case.
-#
-# Verify what your machine actually has:  ghostty +list-fonts | grep -A8 Operator
-#
-# [USER-SPECIFIC] Don't own Operator Mono? Delete the next line. Meslo takes
-# over as primary and everything still works.
-font-family = Operator Mono SSm Lig
+# [USER-SPECIFIC] Don't own Operator Mono? Delete the two Operator lines below
+# and the bold/bold-italic blocks. Meslo takes over and everything still works.
+font-family = Operator Mono Lig
 font-family = MesloLGS Nerd Font Mono
+
+# Bold is pulled from the NON-ligature `Operator Mono` family, because
+# `Operator Mono Lig` ships no bold face at all — only Book and Light. Without
+# this, every bold run gets SYNTHESIZED by dilating strokes, which looks
+# clumsy. Terminals render a lot of bold: eza bolds directories, `ls -l` bolds
+# permissions, `grep` bolds matches.
+#
+# This specific family is the right donor because its metrics are identical to
+# the Lig cut — measured from the .otf files, x-height 490, cap height 620,
+# advance 550 for both — so bold text lines up perfectly with everything else.
+# (The `SSm Lig` cut also has a real bold, but it is ~11% larger and ~11%
+# heavier at the same nominal size, which reads soft on a Retina display. See
+# the font-cuts section in the repo README for the measurements.)
+#
+# `font-style-bold` is REQUIRED here, not optional: Hoefler registers this
+# family's weights unusually — Book is usWeightClass 325 and Bold is 400, not
+# the standard 700 — so weight matching alone will not find the bold face.
+font-family-bold = Operator Mono
+font-family-bold = MesloLGS Nerd Font Mono
+font-style-bold = Bold
+
+# Same story for bold-italic; the Lig cut has no bold-italic either.
+font-family-bold-italic = Operator Mono
+font-family-bold-italic = MesloLGS Nerd Font Mono
+font-style-bold-italic = Bold Italic
+
+# Plain italic needs no override — `Operator Mono Lig Book Italic` exists, and
+# it is the reason to own this typeface in the first place.
 
 font-size = 16
 
