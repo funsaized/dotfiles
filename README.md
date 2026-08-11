@@ -462,6 +462,217 @@ Settings needing local changes are tagged in the source:
 
 ---
 
+## Useful Workflows
+
+Everything above is *what* is configured. This is *how to actually use it.* The
+compounding wins are in the combinations, not the individual tools.
+
+### Learn these five first
+
+If you take nothing else from this repo, take these. They cover most of the
+daily friction:
+
+| | |
+|---|---|
+| `z <fragment>` | Jump to any directory you've visited, from anywhere |
+| `Ctrl-R` | Fuzzy-search your whole shell history |
+| `Ctrl-T` | Fuzzy file picker, inserted into the command you're typing |
+| `alt+b` / `alt+f` / `alt+d` | Move and delete by *word* on the command line |
+| `cmd+d` | Split the terminal |
+
+### Getting somewhere
+
+`zoxide` ranks directories by frecency, so partial names are usually enough:
+
+```bash
+z dash          # -> ~/Documents/programming/funsaized/dashavatara
+z fun s11a      # multiple fragments narrow it down; order doesn't matter
+z -             # back to the previous directory
+zi              # can't remember the name? interactive picker
+```
+
+`z` only knows directories you've actually `cd`'d into before, so it gets better
+over the first week. For anything it doesn't know yet, `Alt-C` fuzzy-searches
+directories under the current one with a tree preview.
+
+### The `**` trigger — the most underrated thing here
+
+Type `**` then `Tab` after almost any command to get a fuzzy picker for that
+command's argument:
+
+```bash
+vim **<TAB>              # pick a file, fuzzily, from anywhere below cwd
+cd **<TAB>               # pick a directory
+kill -9 **<TAB>          # pick a process (Tab multi-selects)
+ssh **<TAB>              # pick a host from ~/.ssh/config and known_hosts
+unset **<TAB>            # pick an env var (also: export, unalias)
+```
+
+It works after *any* command — the default is a fuzzy path picker, which is what
+you want most of the time. `kill`, `ssh`, `telnet`, `export`, `unset` and
+`unalias` have purpose-built pickers instead. It replaces most of the `ls` →
+squint → retype loop.
+
+There's no git-aware picker, so `git checkout **<TAB>` completes *paths*, not
+branch names — use `lg` for branch switching, or plain `git branch`, which this
+config sorts most-recent-first.
+
+### Finding things, then opening them
+
+`rg` and `fd` both respect `.gitignore` by default, so results are signal:
+
+```bash
+rg "useEffect"                    # search contents
+rg -l "useEffect"                 # just the filenames
+fd component                      # search filenames
+fd -e ts -e tsx                   # by extension
+```
+
+Chain either into fzf when you want to browse before committing to a file:
+
+```bash
+rg -l "TODO" | fzf --preview 'bat --color=always {}'
+```
+
+`Ctrl-T` already does this for the general case — it previews with `bat`, so you
+can read a file's contents before selecting it, and it inserts the path into
+whatever command you were already typing.
+
+### The git loop
+
+```bash
+gs                # short status with branch line
+gd                # diff -> delta, side-by-side, word-level highlighting
+ga -p             # stage hunk by hunk, also rendered through delta
+gc "message"
+gp                # no -u needed, even on a brand-new branch
+```
+
+Inside any delta pager, `n` and `N` jump **between files** rather than scrolling
+line by line — much faster on a large diff. File paths are hyperlinked; cmd-click
+opens them.
+
+For anything more involved than "stage everything", `lg` (lazygit) is faster than
+the CLI — staging individual lines, interactive rebase, reflog browsing, and
+resolving conflicts all have real UI.
+
+Occasionally useful:
+
+```bash
+gl                # last 20 commits as a graph
+git last          # what did I just commit?
+git amend         # fold staged changes into it, keep the message
+git unstage <f>   # the opposite of git add, without googling it
+git churn         # files changed most often -- a decent proxy for risk
+```
+
+Two settings pay off silently. `rerere` records how you resolved a conflict and
+replays it if the same one reappears, which matters on long-lived branches. And
+`zdiff3` puts the **common ancestor** in conflict blocks, so instead of guessing
+which of two versions is right, you can see what each side actually changed.
+
+### Working in splits
+
+```
+cmd+d              split right          cmd+alt+←↑↓→   focus by direction
+cmd+shift+d        split down           cmd+[ / cmd+]  cycle splits
+cmd+shift+enter    zoom / unzoom        cmd+alt+=      equalize
+```
+
+The zoom is the one people miss. Run a dev server in one split and tests in
+another, then `cmd+shift+enter` to blow either up to full window when you need
+to actually read the output, and again to drop back. No layout to rebuild.
+
+`` cmd+` `` opens the quick terminal over whatever app is focused — a scratchpad
+for a one-off command without leaving Zed or the browser. It hides again on blur.
+
+`cmd+f` searches scrollback.
+
+### Command-line editing
+
+These only work because `macos-option-as-alt = true`; on a stock macOS terminal
+Option never reaches zsh.
+
+| | |
+|---|---|
+| `alt+b` / `alt+f` | Back / forward one word |
+| `alt+d` | Delete the word ahead of the cursor |
+| `alt+backspace` | Delete the word behind the cursor |
+| `ctrl+a` / `ctrl+e` | Start / end of line |
+| `ctrl+w` | Delete previous word |
+| `ctrl+u` | Clear the whole line |
+| `→` at end of line | Accept the greyed-out autosuggestion |
+
+The greyed-out text as you type is `zsh-autosuggestions` proposing your most
+recent matching command. Commands turn **green when valid and red when not**,
+before you press Enter — a typo'd command name is visible immediately.
+
+### Reading output
+
+```bash
+b file.ts                    # bat: syntax highlighting + line numbers
+ll                           # long listing, with per-file git status
+lt                           # 2-level tree, respecting .gitignore
+some-command | jq '.data[]'  # slice JSON
+```
+
+Selecting text with the mouse copies it to the system clipboard immediately —
+there is no `cmd+c` step — and trailing whitespace is stripped on the way out,
+so copying a block of terminal output doesn't paste a ragged right edge.
+
+### The config edit loop
+
+```bash
+editghost      # then cmd+shift+, to reload Ghostty live -- no restart
+editstarship   # takes effect on the very next prompt
+editzsh        # then: reload
+```
+
+Before reloading Ghostty, `ghostty +validate-config` will catch typos. Worth
+knowing when a change appears to do nothing:
+
+```bash
+ghostty +show-config              # what Ghostty thinks its config IS
+ghostty +show-face --style=bold --string=A   # which font face a style resolves to
+starship explain                  # which prompt modules actually rendered
+starship timings                  # per-module cost
+```
+
+`starship explain` is the one to reach for when you add a module and nothing
+appears — it only lists modules that rendered, so a missing entry means the
+module isn't in your `format` string.
+
+### Per-project environments
+
+Drop an `.envrc` in a project, then:
+
+```bash
+direnv allow
+```
+
+Variables load on `cd` in and unload on `cd` out. The prompt shows a `📁`
+indicator with the current state, so a **blocked** `.envrc` — the usual cause of
+"why aren't my env vars set" — is visible rather than silent.
+
+### Cheat sheet
+
+| Keys / command | Does |
+|---|---|
+| `z <frag>` · `zi` · `z -` | Jump to directory · pick interactively · go back |
+| `Ctrl-R` · `Ctrl-T` · `Alt-C` | History · file picker · directory picker |
+| `**<TAB>` | Fuzzy-complete any command's argument |
+| `alt+b` `alt+f` `alt+d` | Word back · word forward · delete word |
+| `cmd+d` · `cmd+shift+d` | Split right · split down |
+| `cmd+alt+←↑↓→` · `cmd+shift+enter` | Focus split · zoom split |
+| `` cmd+` `` · `cmd+f` | Quick terminal · search scrollback |
+| `gs` `gd` `ga -p` `gc` `gp` | Status · diff · stage hunks · commit · push |
+| `lg` · `gl` · `git churn` | lazygit · log graph · highest-churn files |
+| `ll` `lt` `b` | Listing w/ git · tree · bat |
+| `n` / `N` in a diff | Jump between files in the pager |
+| `editghost` + `cmd+shift+,` | Edit and hot-reload terminal config |
+
+---
+
 ## License
 
 Do whatever you want with these. No attribution needed. If something here makes
