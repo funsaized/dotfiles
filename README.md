@@ -111,6 +111,53 @@ in dark mode, enable it *and* dial the strength down (`font-thicken-strength =
 `adjust-cell-height` approximates Zed's `"buffer_line_height": "comfortable"` —
 terminal cells are tighter by default.
 
+#### A note on font cuts
+
+The terminal uses `Operator Mono SSm Lig`; **Zed deliberately uses plain
+`Operator Mono Lig`**. Same foundry, different tradeoff, and it's worth knowing
+why before you "fix" the inconsistency.
+
+Measured from the actual font files (both 1000 upem, both `usWeightClass` 400):
+
+| Metric | `Lig Book` | `SSm Lig Book` | Δ |
+|---|---:|---:|---:|
+| x-height | 490 | 544 | **+11.0%** |
+| cap height | 620 | 688 | **+11.0%** |
+| advance width | 550 | 625 | **+13.6%** |
+| stem width (`l`) | 401 | 446 | **+11.2%** |
+| ascender / descender | 960 / −240 | 960 / −240 | 0% |
+
+SSm is Hoefler's **ScreenSmart** cut: bigger x-height and fatter stems so glyphs
+survive being rasterized across very few pixels. Note the vertical metrics are
+*identical* — so at the same nominal `font-size`, SSm draws ~11% larger, ~11%
+heavier glyphs into the same line box. Denser text, more antialiased edge per
+stroke, and on a Retina panel that reads as **soft rather than crisp**.
+
+ScreenSmart's payoff depends on a rasterizer that snaps stems to the pixel grid.
+macOS hasn't done that since it dropped subpixel antialiasing in Mojave — it
+renders pure grayscale AA with no stem snapping. So on this hardware you inherit
+all of SSm's design compromises and none of its benefit.
+
+**It's still right for the terminal**, because there the competing defect is
+worse: plain `Operator Mono Lig` has no bold face, and a terminal renders bold
+constantly. Synthetic bold looks worse than slightly-soft real bold. An editor
+renders far less bold, so the tradeoff flips.
+
+If you'd rather have one cut everywhere, the non-ligature `Operator Mono` family
+has metrics *identical* to `Operator Mono Lig` (x-height 490, cap 620, advance
+550) **and** ships a real Bold — so it can supply the bold face without changing
+proportions:
+
+```
+font-family      = Operator Mono Lig
+font-family-bold = Operator Mono
+font-style-bold  = Bold
+```
+
+Caveat if you try it: Hoefler registers this family's weights unusually — `Book`
+is `usWeightClass` 325 and `Bold` is 400, not 700 — so specify `font-style-bold`
+explicitly rather than trusting weight matching.
+
 #### The one setting that fixes daily friction
 
 ```
@@ -261,8 +308,9 @@ lives.
 
 ### Zed
 
-**Theme & type.** Catppuccin Latte / Mocha, Operator Mono SSm Lig at 16 — the
-same cut as the terminal, for the same reason — with
+**Theme & type.** Catppuccin Latte / Mocha, Operator Mono Lig at 16 —
+deliberately a *different* cut from the terminal's, see
+[Font cuts](#a-note-on-font-cuts) — with
 `theme_overrides` applying italic across ~11 syntax scopes — comments, keywords,
 types, decorators, parameters, escapes. With a font that has a true italic, this
 makes structure readable at a glance: *italic = type-level, upright =

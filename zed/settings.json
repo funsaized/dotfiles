@@ -107,17 +107,18 @@
   "agent_ui_font_size": 18,
 
   // ── Fonts ─────────────────────────────────────────────────────────────────
-  // Use the SSm ("Screen Smart") + Lig cut, NOT plain "Operator Mono Lig".
-  // Operator Mono Lig ships only Book and Light -- there is no bold face, so
-  // every bold run gets synthesized by dilating strokes. SSm Lig ships real
-  // Book/Medium/Bold with italics for each, and SSm is the screen-optimized
-  // cut. Matches ghostty/config so editor and terminal render identically.
-  //   List faces:  fc-list | grep Operator     (or ghostty +list-fonts)
-  // "ui_font_family": "Operator Mono SSm Lig",
+  // Deliberately the plain "Lig" cut here, NOT the "SSm Lig" cut the terminal
+  // uses. SSm is Hoefler's ScreenSmart family: sturdier stems and larger
+  // x-height, drawn to survive small text on LOW-resolution displays. On a
+  // Retina panel those compromises buy nothing and read as soft/blurry, so the
+  // original cut -- finer, more precisely defined stems -- is sharper here.
+  // Ghostty stays on SSm because terminals render far more bold, and plain
+  // "Lig" has no bold face to load. Different surfaces, different tradeoff.
+  // "ui_font_family": "Operator Mono Lig",
   "ui_font_size": 16.0,
   "ui_font_weight": 450,
   "ui_font_family": ".ZedSans",
-  "buffer_font_family": "Operator Mono SSm Lig",
+  "buffer_font_family": "Operator Mono Lig",
   "buffer_font_size": 16.0,
   "buffer_font_weight": 400,
   "buffer_line_height": "comfortable",
@@ -476,11 +477,7 @@
 
   // ── Terminal ──────────────────────────────────────────────────────────────
   "terminal": {
-    // Same cut as buffer_font_family and ghostty/config. Matters most here:
-    // terminals render far more bold than editors (eza bolds directories,
-    // ls -l bolds permissions, grep bolds matches), and the plain "Lig" cut
-    // has no bold face to load.
-    "font_family": "Operator Mono SSm Lig",
+    "font_family": "Operator Mono Lig",
     "font_size": 16,
     "font_weight": 400,
     "shell": "system",
