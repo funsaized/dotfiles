@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# install.sh backups — timestamped copies of whatever it replaced
+*.bak-*
+*.bak
+
+# Never commit a real key file, whatever it gets named
+*.pem
+*.key
+.env
+.env.*
