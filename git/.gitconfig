@@ -1,0 +1,74 @@
+[user]
+	# [USER-SPECIFIC] your identity
+	name = YOUR NAME HERE
+	email = YOUR EMAIL HERE
+
+# ── Diffs via delta ────────────────────────────────────────────────────────
+# delta re-renders git's diff output with syntax highlighting and real
+# word-level intra-line diffs, so a one-character change reads as one
+# character instead of two whole replaced lines.
+[core]
+	pager = delta
+
+[interactive]
+	# Makes `git add -p` use delta too.
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true          ; n / N jump between files in the pager
+	side-by-side = true
+	line-numbers = true
+	hyperlinks = true
+	syntax-theme = Catppuccin Mocha
+	file-style = bold yellow
+	file-decoration-style = yellow ul
+	hunk-header-decoration-style = blue box
+
+[merge]
+	# Shows the common ancestor in conflict blocks, not just the two sides.
+	# Turns "which of these is right?" into "here is what each side changed."
+	conflictstyle = zdiff3
+
+[diff]
+	# Detect renames AND copies; scan the whole commit for sources.
+	renames = copies
+	# Smarter hunk boundaries — stops diffs from splitting on a lone `}`.
+	algorithm = histogram
+	colorMoved = default
+
+[push]
+	default = current
+	autoSetupRemote = true   ; `git push` on a new branch just works
+
+[pull]
+	rebase = true
+
+[fetch]
+	prune = true             ; drop local refs for branches deleted on remote
+
+[rebase]
+	autoStash = true
+	autosquash = true
+
+[init]
+	defaultBranch = main
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate    ; `git branch` lists most-recent first
+
+[rerere]
+	# Remembers how you resolved a conflict and replays it next time.
+	enabled = true
+	autoUpdate = true
+
+[alias]
+	st = status --short --branch
+	lg = log --oneline --graph --decorate --all -30
+	last = log -1 --stat
+	unstage = restore --staged
+	amend = commit --amend --no-edit
+	# Files changed most often — a decent proxy for where the risk lives.
+	churn = "!git log --format=format: --name-only | sort | uniq -c | sort -rn | head -20"

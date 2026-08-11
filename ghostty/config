@@ -1,0 +1,128 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  Ghostty — single source of truth
+# ═══════════════════════════════════════════════════════════════════════════
+#
+#  NOTE: On macOS, Ghostty loads BOTH of these paths and MERGES them:
+#      ~/.config/ghostty/config                                  <- this file
+#      ~/Library/Application Support/com.mitchellh.ghostty/config
+#
+#  Splitting settings across the two is how you end up editing one file and
+#  seeing no change. Everything lives here; the other file is a stub.
+#
+#  Reload in place:  cmd+shift+,        Open this file:  cmd+,
+#  Validate:         ghostty +validate-config
+#  All options:      ghostty +show-config --default --docs
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# ── Theme ──────────────────────────────────────────────────────────────────
+# Follows the macOS system appearance. Pairs with the Zed theme block, so the
+# editor and terminal flip light/dark together instead of clashing at dusk.
+#
+# List all:  ghostty +list-themes
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+
+
+# ── Typography ─────────────────────────────────────────────────────────────
+# Primary face matches Zed's `buffer_font_family` exactly, so a snippet looks
+# identical whether it's in the editor or piped through `bat`.
+#
+# Operator Mono ships no icon glyphs, so MesloLGS Nerd Font is listed second
+# as a fallback — Ghostty walks this list per-codepoint. That's what renders
+# the `eza --icons` file icons and the starship prompt symbols.
+#
+# [USER-SPECIFIC] Don't own Operator Mono? Delete the next line. Meslo takes
+# over as primary and everything still works.
+font-family = Operator Mono Lig
+font-family = MesloLGS Nerd Font Mono
+
+font-size = 16
+
+# Operator Mono is a light-weight face and reads thin on a dark background at
+# terminal sizes. This thickens the stems back to editor-like weight.
+font-thicken = true
+
+# Approximates Zed's `"buffer_line_height": "comfortable"`. Terminal cells are
+# tight by default (~1.2); this opens them up without wasting vertical space.
+adjust-cell-height = 12%
+
+
+# ── Cursor ─────────────────────────────────────────────────────────────────
+# Mirrors Zed's "cursor_shape": "underline" + "cursor_blink": true.
+cursor-style = underline
+cursor-style-blink = true
+mouse-hide-while-typing = true
+
+
+# ── Window & chrome ────────────────────────────────────────────────────────
+background-opacity = 0.95
+background-blur = 20
+
+# Breathing room around the grid. `balance` distributes leftover pixels evenly
+# instead of dumping them all on the right/bottom edge.
+window-padding-x = 12
+window-padding-y = 10
+window-padding-balance = true
+
+# Wide-gamut color on Apple displays. Free — no measurable frame cost.
+window-colorspace = display-p3
+
+macos-titlebar-style = transparent
+window-save-state = always
+
+
+# ── Splits ─────────────────────────────────────────────────────────────────
+# Ghostty has native splits; without keybinds they're unreachable.
+# The dim on unfocused splits mirrors Zed's `active_pane_modifiers`.
+unfocused-split-opacity = 0.85
+
+keybind = super+d=new_split:right
+keybind = super+shift+d=new_split:down
+keybind = super+alt+left=goto_split:left
+keybind = super+alt+right=goto_split:right
+keybind = super+alt+up=goto_split:up
+keybind = super+alt+down=goto_split:down
+keybind = super+shift+enter=toggle_split_zoom
+keybind = super+alt+equal=equalize_splits
+
+
+# ── Quick terminal ─────────────────────────────────────────────────────────
+# System-wide dropdown scratchpad — slides down over whatever app is focused.
+# cmd+` because it's reachable without leaving home row.
+quick-terminal-position = top
+quick-terminal-autohide = true
+keybind = global:super+grave_accent=toggle_quick_terminal
+
+
+# ── Keyboard behavior ──────────────────────────────────────────────────────
+# THE fix. Without this, macOS eats Option and zsh never sees a Meta key —
+# which is why alt+b / alt+f (jump word back/forward), alt+d (kill word) and
+# alt+backspace have been silently doing nothing.
+macos-option-as-alt = true
+
+
+# ── Shell integration ──────────────────────────────────────────────────────
+# `sudo` exports SUDO_TERMINFO so Ghostty's terminfo survives a sudo shell —
+# without it, `sudo vim` gets a broken TERM.
+# `cursor` lets the shell drive cursor shape; `title` keeps tab titles live.
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
+
+# ── Clipboard & selection ──────────────────────────────────────────────────
+# [PRESERVED] These four came from the old split config — kept verbatim.
+clipboard-read = allow
+clipboard-write = allow
+clipboard-paste-protection = false
+macos-secure-input-indication = true
+macos-auto-secure-input = false
+
+# Selecting text puts it straight on the system clipboard — no cmd+c step.
+copy-on-select = clipboard
+clipboard-trim-trailing-spaces = true
+
+
+# ── Bell ───────────────────────────────────────────────────────────────────
+# No sound. Bounce the Dock icon and mark the tab title instead, so a finished
+# long-running build is visible but not audible.
+bell-features = attention,title,no-audio,no-system

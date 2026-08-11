@@ -1,0 +1,319 @@
+#  ═══════════════════════════════════════════════════════════════════════════
+#  Starship prompt
+#  ═══════════════════════════════════════════════════════════════════════════
+#
+#  Design rules for this file:
+#
+#  1. EVERY module configured below appears in `format` or `right_format`.
+#     Starship silently ignores config for modules absent from the format
+#     string. If you add a [module] block, add its $module to the format too,
+#     or you're writing dead config.
+#
+#  2. Colors are ANSI names ("cyan", "purple"), never hex. The terminal theme
+#     owns the actual RGB. Ghostty flips Catppuccin Latte <-> Mocha with the
+#     macOS appearance, and ANSI names follow that flip for free. Hardcoded
+#     hex would look correct in exactly one of the two modes.
+#
+#  3. Measure before claiming a perf win. Starship runs modules in PARALLEL,
+#     so an expensive module usually hides behind the others and total prompt
+#     latency barely moves. Use `starship timings` for per-module cost, but
+#     time the whole prompt before believing a module is "the slow one".
+#
+#  Docs: https://starship.rs/config/
+#  ═══════════════════════════════════════════════════════════════════════════
+
+
+# ── Prompt layout ──────────────────────────────────────────────────────────
+#
+# Line 1: who / where / vcs / language runtimes
+# Line 2: jobs, timing, exit status, and the prompt character
+#
+# NOTE: $git_metrics is deliberately absent — but for accuracy, here is what
+# it actually costs, measured rather than assumed:
+#
+#   1267-file repo, dirty worktree, 15 runs each:
+#     with    git_metrics ... 45.3 ms/prompt   (module itself: 14 ms)
+#     without git_metrics ... 46.5 ms/prompt   (i.e. no gain — within noise)
+#
+# It is the most expensive single MODULE, but starship runs modules in
+# parallel, so removing it buys ~nothing at this scale; the ~35 ms floor is
+# starship's own process startup. It's dropped for signal-to-noise, not speed.
+# Re-enabling it is cheap: flip `disabled` below and add $git_metrics here.
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$nodejs\
+$java\
+$python\
+$rust\
+$golang\
+$docker_context\
+$direnv\
+$line_break\
+$jobs\
+$cmd_duration\
+$status\
+$character"""
+
+right_format = """$time"""
+
+
+# ── Global behavior ────────────────────────────────────────────────────────
+add_newline = true
+
+# Was 500ms. The [java] module shells out to `java -version`, and under SDKMAN
+# that routinely exceeds 500ms on a cold JVM — so the module was silently
+# timing out and rendering nothing. 1000ms is enough for it to actually appear.
+command_timeout = 1000
+
+scan_timeout = 30
+
+
+# ── Semantic palette ───────────────────────────────────────────────────────
+# One place to retune every color. Values are ANSI names on purpose (see rule
+# 2 at the top) so the prompt tracks the terminal's light/dark theme.
+palette = "adaptive"
+
+[palettes.adaptive]
+ok       = "green"
+err      = "red"
+dir      = "cyan"
+vcs      = "purple"
+vcs_dirty= "red"
+runtime  = "green"
+jvm      = "red"
+snake    = "yellow"
+crab     = "red"
+gopher   = "cyan"
+whale    = "blue"
+muted    = "white"
+warn     = "yellow"
+
+
+# ── Prompt character ───────────────────────────────────────────────────────
+[character]
+success_symbol = '[➜](bold ok)'
+error_symbol = '[➜](bold err)'
+vimcmd_symbol = '[❮](bold ok)'
+vimcmd_replace_symbol = '[❮](bold vcs)'
+vimcmd_visual_symbol = '[❮](bold warn)'
+
+
+# ── Directory ──────────────────────────────────────────────────────────────
+[directory]
+format = '[$path]($style)[$read_only]($read_only_style) '
+style = 'bold dir'
+truncation_length = 3
+truncate_to_repo = true
+truncation_symbol = '…/'
+home_symbol = '~'
+read_only = ' 🔒'
+
+[directory.substitutions]
+"Documents" = "📄"
+"Downloads" = "⬇️"
+"Music" = "🎵"
+"Pictures" = "🖼️"
+"Developer" = "💻"
+"Desktop" = "🖥️"
+"Projects" = "🚀"
+# Your actual dev roots — collapses a 5-segment path down to one glyph.
+"Documents/programming" = "🛠️"
+"funsaized" = "🦊"
+"snimmagadda1" = "🐙"
+
+
+# ── Git ────────────────────────────────────────────────────────────────────
+[git_branch]
+format = 'on [$symbol$branch(:$remote_branch)]($style) '
+symbol = '🌿 '
+style = 'bold vcs'
+truncation_length = 20
+truncation_symbol = '…'
+always_show_remote = false
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = 'bold vcs_dirty'
+conflicted = '⚔️'
+ahead = '🚀${count}'
+behind = '😰${count}'
+diverged = '😵⇡${ahead_count}⇣${behind_count}'
+up_to_date = '✨'
+untracked = '🤷'
+stashed = '📦'
+modified = '📝'
+staged = '✅'
+renamed = '📛'
+deleted = '🗑️'
+
+[git_commit]
+commit_hash_length = 7
+format = '[\($hash$tag\)]($style) '
+style = 'bold ok'
+only_detached = true
+tag_symbol = ' 🔖 '
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = 'bold warn'
+rebase = '♻️ REBASING'
+merge = '🤝 MERGING'
+revert = '↩️ REVERTING'
+cherry_pick = '🍒 CHERRY-PICKING'
+bisect = '🔍 BISECTING'
+am = '📧 AM'
+am_or_rebase = '♻️ AM/REBASE'
+
+# DISABLED for signal-to-noise, not for speed — see the measured numbers in
+# the note on `format` above. To restore: set disabled = false AND add
+# $git_metrics to the format string. Both steps, or it silently does nothing.
+[git_metrics]
+disabled = true
+format = '([+$added]($added_style) )([-$deleted]($deleted_style) )'
+added_style = 'bold ok'
+deleted_style = 'bold err'
+only_nonzero_diffs = true
+
+
+# ── Language runtimes ──────────────────────────────────────────────────────
+[nodejs]
+format = 'via [$symbol($version )]($style)'
+symbol = '⚡ '
+style = 'bold runtime'
+version_format = 'v${major}.${minor}.${patch}'
+detect_extensions = ['js', 'mjs', 'cjs', 'ts', 'mts', 'cts', 'jsx', 'tsx']
+detect_files = ['package.json', '.node-version', '.nvmrc', 'tsconfig.json']
+detect_folders = ['node_modules']
+
+[java]
+format = 'via [$symbol($version )]($style)'
+symbol = '☕ '
+style = 'jvm dimmed'
+version_format = 'v${major}.${minor}'
+detect_extensions = ['java', 'class', 'gradle', 'jar', 'clj', 'cljc']
+detect_files = [
+    'pom.xml',
+    'build.gradle',
+    'build.gradle.kts',
+    'build.sbt',
+    '.java-version',
+    'deps.edn',
+    'project.clj',
+    'build.boot',
+    '.sdkmanrc',
+]
+
+[python]
+format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+symbol = '🐍 '
+style = 'bold snake'
+python_binary = ['python', 'python3']
+detect_extensions = ['py']
+detect_files = [
+    'requirements.txt',
+    '.python-version',
+    'pyproject.toml',
+    'Pipfile',
+    'tox.ini',
+    'setup.py',
+    'setup.cfg',
+]
+
+[rust]
+format = 'via [$symbol($version )]($style)'
+symbol = '🦀 '
+style = 'bold crab'
+
+[golang]
+format = 'via [$symbol($version )]($style)'
+symbol = '🐹 '
+style = 'bold gopher'
+
+
+# ── Context ────────────────────────────────────────────────────────────────
+[docker_context]
+format = 'via [$symbol$context]($style) '
+symbol = '🐳 '
+style = 'bold whale'
+only_with_files = true
+detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile']
+
+# You run `direnv hook zsh` but had no prompt indicator, so a blocked .envrc
+# (the common "why aren't my env vars set" case) was invisible.
+[direnv]
+disabled = false
+format = 'via [$symbol$loaded/$allowed]($style) '
+symbol = '📁 '
+style = 'bold warn'
+allowed_msg = 'ok'
+not_allowed_msg = '🚫BLOCKED'
+denied_msg = '🚫denied'
+loaded_msg = 'on'
+unloaded_msg = 'off'
+
+[username]
+format = '[$user]($style) '
+style_user = 'bold muted'
+style_root = 'bold err'
+show_always = false
+
+[hostname]
+ssh_only = true
+ssh_symbol = '🌐 '
+format = '[$ssh_symbol$hostname]($style) '
+style = 'bold dimmed ok'
+
+
+# ── Status line (line 2) ───────────────────────────────────────────────────
+[jobs]
+format = '[$symbol$number]($style) '
+symbol = '⚙️ '
+style = 'bold whale'
+number_threshold = 1
+symbol_threshold = 1
+
+[cmd_duration]
+min_time = 2_000
+format = 'took [⏱️ $duration]($style) '
+style = 'bold warn'
+show_milliseconds = false
+show_notifications = false
+min_time_to_notify = 45_000
+
+[status]
+format = '[$symbol$status]($style) '
+symbol = '❌ '
+style = 'bold err'
+map_symbol = true
+recognize_signal_code = true
+pipestatus = true
+disabled = false
+
+[line_break]
+disabled = false
+
+
+# ── Right prompt ───────────────────────────────────────────────────────────
+[time]
+disabled = false
+format = '[🕐 $time]($style)'
+style = 'bold dimmed muted'
+time_format = '%R'
+use_12hr = false
+
+
+#  ═══════════════════════════════════════════════════════════════════════════
+#  REMOVED: [package] [battery] [memory_usage] [shell] [ruby] [php]
+#           [terraform] [conda] [aws] [kubernetes]
+#
+#  All ten were fully configured in the previous version of this file and none
+#  of them ever rendered a single character — the custom `format` string never
+#  referenced them. ~150 lines of pure no-op. If you want one back, add BOTH
+#  the [block] and its $module entry to `format`.
+#  ═══════════════════════════════════════════════════════════════════════════
