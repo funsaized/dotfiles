@@ -107,11 +107,17 @@
   "agent_ui_font_size": 18,
 
   // ── Fonts ─────────────────────────────────────────────────────────────────
-  // "ui_font_family": "Operator Mono Lig",
+  // Use the SSm ("Screen Smart") + Lig cut, NOT plain "Operator Mono Lig".
+  // Operator Mono Lig ships only Book and Light -- there is no bold face, so
+  // every bold run gets synthesized by dilating strokes. SSm Lig ships real
+  // Book/Medium/Bold with italics for each, and SSm is the screen-optimized
+  // cut. Matches ghostty/config so editor and terminal render identically.
+  //   List faces:  fc-list | grep Operator     (or ghostty +list-fonts)
+  // "ui_font_family": "Operator Mono SSm Lig",
   "ui_font_size": 16.0,
   "ui_font_weight": 450,
   "ui_font_family": ".ZedSans",
-  "buffer_font_family": "Operator Mono Lig",
+  "buffer_font_family": "Operator Mono SSm Lig",
   "buffer_font_size": 16.0,
   "buffer_font_weight": 400,
   "buffer_line_height": "comfortable",
@@ -470,7 +476,11 @@
 
   // ── Terminal ──────────────────────────────────────────────────────────────
   "terminal": {
-    "font_family": "Operator Mono Lig",
+    // Same cut as buffer_font_family and ghostty/config. Matters most here:
+    // terminals render far more bold than editors (eza bolds directories,
+    // ls -l bolds permissions, grep bolds matches), and the plain "Lig" cut
+    // has no bold face to load.
+    "font_family": "Operator Mono SSm Lig",
     "font_size": 16,
     "font_weight": 400,
     "shell": "system",

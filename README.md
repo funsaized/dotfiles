@@ -261,7 +261,8 @@ lives.
 
 ### Zed
 
-**Theme & type.** Catppuccin Latte / Mocha, Operator Mono Lig at 16, with
+**Theme & type.** Catppuccin Latte / Mocha, Operator Mono SSm Lig at 16 — the
+same cut as the terminal, for the same reason — with
 `theme_overrides` applying italic across ~11 syntax scopes — comments, keywords,
 types, decorators, parameters, escapes. With a font that has a true italic, this
 makes structure readable at a glance: *italic = type-level, upright =
