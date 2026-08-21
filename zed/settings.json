@@ -34,13 +34,12 @@
     },
     "codex-acp": {
       "favorite_config_option_values": {
-        "model": ["gpt-5.3-codex-spark", "gpt-5.5"]
+        "model": ["gpt-5.6-sol", "gpt-5.6-terra"]
       },
       "default_config_options": {
-        "fast-mode": true,
-        "reasoning_effort": "max",
+        "fast-mode": false,
         "mode": "auto",
-        "model": "gpt-5.6-luna"
+        "model": "gpt-5.6-sol"
       },
       "type": "registry"
     },
@@ -54,23 +53,23 @@
     "default_model": {
       "effort": "high",
       "enable_thinking": true,
-      "provider": "copilot_chat",
-      "model": "gpt-5-mini"
+      "provider": "openai-subscribed",
+      "model": "gpt-5.6-sol"
     },
     "play_sound_when_agent_done": "always",
     "tool_permissions": {
       "default": "allow"
     },
     "inline_assistant_model": {
-      "provider": "copilot_chat",
-      "model": "gpt-5.1-codex-max",
+      "provider": "openai-subscribed",
+      "model": "gpt-5.6-terra",
       "enable_thinking": false
     },
     "profiles": {
       "descriptive": {
         "default_model": {
-          "provider": "copilot_chat",
-          "model": "gpt-5.2",
+          "provider": "openai-subscribed",
+          "model": "gpt-5.6-terra",
           "enable_thinking": false
         },
         "name": "Descriptive",
@@ -81,23 +80,13 @@
     },
     "favorite_models": [
       {
-        "provider": "copilot_chat",
-        "model": "gpt-5.1-codex-max",
-        "enable_thinking": false
+        "provider": "openai-subscribed",
+        "model": "gpt-5.6-sol",
+        "enable_thinking": true
       },
       {
-        "provider": "copilot_chat",
-        "model": "claude-sonnet-4.5",
-        "enable_thinking": false
-      },
-      {
-        "provider": "copilot_chat",
-        "model": "claude-opus-4.6",
-        "enable_thinking": false
-      },
-      {
-        "provider": "copilot_chat",
-        "model": "gpt-5.4",
+        "provider": "openai-subscribed",
+        "model": "gpt-5.6-terra",
         "enable_thinking": false
       }
     ],
@@ -283,47 +272,30 @@
         "background_coloring": "disabled"
       }
     },
-    // JS/TS/JSX/TSX → oxfmt CLI via stdin (format) + oxlint LSP (lint + fix-on-save).
-    //
-    // NOTE: oxfmt's --lsp mode is broken in 0.16 (returns null for every format request),
-    // so we use the CLI with --stdin-filepath instead. This requires oxfmt ≥ 0.46
-    // installed globally:  `bun add -g oxfmt@latest`
-    //
-    // The `oxlint` LSP from the official "Oxc" zed extension (oxc-project/oxc-zed)
-    // still handles diagnostics and `source.fixAll.oxc` code actions.
-    // `"!eslint"` blocks Zed's bundled eslint LSP everywhere.
+    // JS/TS/JSX/TSX → project-local oxfmt and oxlint language servers.
+    // Biome and ESLint are disabled to prevent overlapping diagnostics and fixes.
     "JavaScript": {
       "tab_size": 2,
       "colorize_brackets": true,
       "indent_guides": {
         "background_coloring": "disabled"
       },
-      "language_servers": ["...", "!eslint", "oxlint"],
-      "formatter": {
-        "external": {
-          "command": "oxfmt",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      },
-      "prettier": { "allowed": false },
-      "code_actions_on_format": {
-        "source.fixAll.oxc": true
-      }
+      "language_servers": ["oxfmt", "oxlint", "...", "!biome", "!eslint"],
+      "formatter": [
+        { "language_server": { "name": "oxfmt" } },
+        { "code_action": "source.fixAll.oxc" }
+      ],
+      "prettier": { "allowed": false }
     },
     "JSX": {
       "tab_size": 2,
       "colorize_brackets": true,
-      "language_servers": ["...", "!eslint", "oxlint"],
-      "formatter": {
-        "external": {
-          "command": "oxfmt",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      },
-      "prettier": { "allowed": false },
-      "code_actions_on_format": {
-        "source.fixAll.oxc": true
-      }
+      "language_servers": ["oxfmt", "oxlint", "...", "!biome", "!eslint"],
+      "formatter": [
+        { "language_server": { "name": "oxfmt" } },
+        { "code_action": "source.fixAll.oxc" }
+      ],
+      "prettier": { "allowed": false }
     },
     "TypeScript": {
       "tab_size": 2,
@@ -331,55 +303,37 @@
       "indent_guides": {
         "background_coloring": "disabled"
       },
-      "language_servers": ["...", "!eslint", "oxlint"],
-      "formatter": {
-        "external": {
-          "command": "oxfmt",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      },
-      "prettier": { "allowed": false },
-      "code_actions_on_format": {
-        "source.fixAll.oxc": true
-      }
+      "language_servers": ["oxfmt", "oxlint", "...", "!biome", "!eslint"],
+      "formatter": [
+        { "language_server": { "name": "oxfmt" } },
+        { "code_action": "source.fixAll.oxc" }
+      ],
+      "prettier": { "allowed": false }
     },
     "TSX": {
       "tab_size": 2,
       "colorize_brackets": true,
-      "language_servers": ["...", "!eslint", "oxlint"],
-      "formatter": {
-        "external": {
-          "command": "oxfmt",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      },
-      "prettier": { "allowed": false },
-      "code_actions_on_format": {
-        "source.fixAll.oxc": true
-      }
+      "language_servers": ["oxfmt", "oxlint", "...", "!biome", "!eslint"],
+      "formatter": [
+        { "language_server": { "name": "oxfmt" } },
+        { "code_action": "source.fixAll.oxc" }
+      ],
+      "prettier": { "allowed": false }
     },
     "C++": {
       "colorize_brackets": true
     },
-    // JSON/JSONC → oxfmt CLI via stdin
+    // JSON/JSONC → project-local oxfmt language server.
     "JSON": {
       "tab_size": 2,
-      "formatter": {
-        "external": {
-          "command": "oxfmt",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      },
+      "language_servers": ["oxfmt", "...", "!biome"],
+      "formatter": { "language_server": { "name": "oxfmt" } },
       "prettier": { "allowed": false }
     },
     "JSONC": {
       "tab_size": 2,
-      "formatter": {
-        "external": {
-          "command": "oxfmt",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      },
+      "language_servers": ["oxfmt", "...", "!biome"],
+      "formatter": { "language_server": { "name": "oxfmt" } },
       "prettier": { "allowed": false }
     },
     "CSS": {
@@ -443,8 +397,14 @@
         }
       }
     },
-    // oxfmt LSP intentionally NOT configured — it's broken in 0.16 (returns null on
-    // format requests). Formatting is handled via external CLI; see `languages` above.
+    "oxfmt": {
+      "initialization_options": {
+        "settings": {
+          "fmt.configPath": null,
+          "run": "onSave"
+        }
+      }
+    },
     "jdtls": {
       "initialization_options": {
         "settings": {

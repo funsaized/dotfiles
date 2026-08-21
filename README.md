@@ -350,18 +350,18 @@ makes structure readable at a glance: *italic = type-level, upright =
 value-level.* The Ghostty config deliberately mirrors the font, size, and cursor
 shape.
 
-**JS/TS toolchain is oxc, not ESLint/Prettier.** `oxfmt` handles formatting via
-the CLI with `--stdin-filepath`, and `oxlint` handles diagnostics plus
-`source.fixAll.oxc` on save. Zed's bundled `eslint` is blocked everywhere with
-`"!eslint"`. The config carries a note that `oxfmt --lsp` is broken in 0.16
-(returns null for every format request), which is why formatting goes through
-the CLI instead — the kind of detail that costs an hour to rediscover.
+**JS/TS toolchain is oxc, not ESLint/Prettier.** Project-local `oxfmt` and
+`oxlint` language servers handle formatting, diagnostics, and
+`source.fixAll.oxc` on save. Zed's bundled Biome and ESLint servers are blocked
+to prevent duplicate diagnostics and competing fixes. JSON and JSONC use the
+same `oxfmt` language server.
 
 **Focus helpers.** Inactive panes dim to 75%, autosave on focus change, smartcase
 search, wrap guides at 80/100/120 for the three conventions you actually meet.
 
-**Agent setup is two-tier** — a thinking model for agent tasks, a fast codex
-model for inline edits where latency beats deliberation.
+**Agent setup is two-tier** — GPT-5.6 Sol with thinking for agent tasks and the
+faster GPT-5.6 Terra for inline edits where latency beats deliberation. Both use
+Zed's OpenAI subscription provider.
 
 > Replace the `YOUR KEY HERE` / `YOUR PAT HERE` placeholders in
 > `context_servers` before use. `ssh_connections` is intentionally empty.
