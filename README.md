@@ -24,6 +24,8 @@ dotfiles/
 ├── zed/settings.json           # Zed editor
 ├── vscode/settings.json        # VS Code
 ├── claude/skills/notebooklm/   # Claude Code skill — NotebookLM bridge
+├── opencode/opencode.jsonc     # OpenCode models, agents, and permissions
+├── opencode/AGENTS.md          # global OpenCode agent instructions
 ├── scripts/scan-secrets.sh     # credential scanner + pre-commit hook
 ├── docs/METHODOLOGY.md         # how these decisions were made
 └── install.sh                  # symlink bootstrap
@@ -382,6 +384,19 @@ Maintained as a fallback rather than a daily driver. Highlights:
 - **~130-line Copilot terminal allowlist** — read-only commands auto-approved,
   destructive ones blocked, with regex carve-outs for the edge cases (`sort -o`
   writes to a file; `find -exec` runs arbitrary commands).
+
+---
+
+## OpenCode
+
+The global OpenCode setup defines models, specialized subagents, reusable
+commands, permission guardrails, watcher exclusions, and the Playwright MCP
+server. `AGENTS.md` supplies cross-project engineering rules that project-level
+instructions can override.
+
+Both files are symlinked into `~/.config/opencode/`, so local edits remain
+visible to Git. Provider authentication is stored separately and is not part of
+the repository.
 
 ---
 

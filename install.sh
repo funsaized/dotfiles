@@ -125,6 +125,11 @@ else
 fi
 echo
 
+bold "OpenCode"
+link opencode/opencode.jsonc "$HOME/.config/opencode/opencode.jsonc"
+link opencode/AGENTS.md      "$HOME/.config/opencode/AGENTS.md"
+echo
+
 if (( BREW )); then
   bold "CLI tools"
   if ! command -v brew >/dev/null; then
