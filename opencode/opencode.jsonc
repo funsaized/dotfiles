@@ -85,6 +85,12 @@
       "model": "minimax/MiniMax-M3"
     },
 
+    "operator": {
+      "description": "General-purpose coding agent powered by MiniMax M3",
+      "mode": "primary",
+      "model": "minimax/MiniMax-M3"
+    },
+
     // ── Custom specialists ─────────────────────────────────────────
 
     "frontend": {
