@@ -24,9 +24,9 @@ and win on conflict.
 
 - `explore` / `general` — read-only research and multi-step lookups. Use for "how does X work here" questions before editing.
 - `digest` — summarize large files, logs, or unfamiliar modules in a child session instead of reading them into this context.
-- `grunt` — mechanical, fully-specified edits across many files (renames, pattern application, scaffolding). Write the complete spec in the delegation prompt; the child sees nothing from this session.
+- `grunt` — mechanical, fully-specified edits after the approach is decided. Its complete briefing must name exact paths or scope, the transformation, an exemplar when pattern matching, forbidden scope, acceptance criteria, and the verification command. Do not ask it to explore, diagnose, choose an approach, or interpret ambiguity; the child sees nothing from this session.
 - `reviewer` — pre-commit diff review. Suggest running it before any commit that touches auth, data persistence, or money.
-- When delegating, the task prompt is the entire briefing. Include file paths, the exemplar pattern, and acceptance criteria.
+- When delegating, the task prompt is the entire briefing. Include all context needed to execute and verify the work without relying on this session.
 
 ## Code conventions
 

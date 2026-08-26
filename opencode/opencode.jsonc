@@ -1,33 +1,39 @@
 {
-  // Published schema at opencode.ai/config.json is still V1 and flags the
-  // plural V2 fields — omit $schema or ignore editor warnings; opencode2 is fine.
+  "$schema": "https://opencode.ai/config.json",
 
-  // Root default — provider/model only; V2 does not retain a #variant here
   "autoupdate": false,
   "model": "openai/gpt-5.6-sol",
   "default_agent": "build",
-  "permissions": [
-    { "action": "shell", "resource": "git push *", "effect": "ask" },
-    { "action": "shell", "resource": "rm -rf *", "effect": "ask" },
-    { "action": "edit", "resource": "~/.config/**", "effect": "ask" },
-    { "action": "read", "resource": "**/.env*", "effect": "ask" }
-  ],
-  // Avoid inheriting defaults
-  "compaction": { "auto": true, "keep": { "tokens": 20000 }, "buffer": 20000 },
+  "plugin": ["@dietrichgebert/ponytail@4.9.0"],
+  "permission": {
+    "bash": {
+      "git push *": "ask",
+      "rm -rf *": "ask"
+    },
+    "edit": {
+      "~/.config/**": "ask"
+    },
+    "read": {
+      "**/.env*": "ask"
+    }
+  },
 
-  // Optimizations b/c $$$
+  "compaction": {
+    "auto": true,
+    "preserve_recent_tokens": 20000,
+    "reserved": 20000
+  },
+
   "tool_output": {
     "max_lines": 800,
     "max_bytes": 24576
   },
 
-
-  // Ignore build files
   "watcher": {
     "ignore": [
-      "target/**",          // Rust — the big one for herdr-terminal
+      "target/**",
       "node_modules/**",
-      ".next/**",           // Next.js build output
+      ".next/**",
       "dist/**",
       "build/**",
       "coverage/**",
@@ -36,14 +42,14 @@
     ]
   },
 
-  // MCPs leveraged often
   "mcp": {
-    "servers": {
-      "playwright": { "type": "local", "command": ["bunx", "@playwright/mcp"] }
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp"]
     }
   },
 
-  "commands": {
+  "command": {
     "review": {
       "description": "Cross-vendor review of the current diff",
       "agent": "reviewer",
@@ -60,106 +66,111 @@
     }
   },
 
-  "agents": {
-    // ── Primary agents ─────────────────────────────────────────────
-
-    // Implementation — Sol at low effort; cycle up via variant_cycle when
-    // a task turns out to be gnarlier than expected
+  "agent": {
     "build": {
-      "model": "openai/gpt-5.6-sol#low"
+      "model": "openai/gpt-5.6-sol",
+      "variant": "low"
     },
-
-    // Planning — Grok 4.6 xhigh: 500K context for whole-repo passes,
-    // low-frequency turns so it won't drain the SuperGrok weekly pool
     "plan": {
-      "model": "xai/grok-4.6#xhigh"
+      "model": "xai/grok-4.6",
+      "variant": "xhigh"
     },
-
-    // ── Built-in subagents → MiniMax Token Plan ────────────────────
-
     "explore": {
-      "model": "minimax/MiniMax-M3"
+      "model": "minimax-coding-plan/MiniMax-M3"
     },
-
     "general": {
-      "model": "minimax/MiniMax-M3"
+      "model": "minimax-coding-plan/MiniMax-M3"
     },
-
     "operator": {
       "description": "General-purpose coding agent powered by MiniMax M3",
       "mode": "primary",
-      "model": "minimax/MiniMax-M3"
+      "model": "minimax-coding-plan/MiniMax-M3"
     },
-
-    // ── Custom specialists ─────────────────────────────────────────
-
     "frontend": {
       "description": "Frontend and visual work: React/Next.js components, styling, layout, animation, interactive polish",
       "mode": "all",
-      "model": "xai/grok-4.6#high",
+      "model": "xai/grok-4.6",
+      "variant": "high",
       "color": "#e17055",
-      "system": "You specialize in frontend implementation: React/Next.js components, styling, layout, animation, and interactive polish. Favor working, visually complete first passes. Match the project's existing component patterns and design tokens before introducing new ones."
+      "prompt": "You specialize in frontend implementation: React/Next.js components, styling, layout, animation, and interactive polish. Favor working, visually complete first passes. Match the project's existing component patterns and design tokens before introducing new ones."
     },
-
     "reviewer": {
       "description": "Reviews changes for correctness, security, regressions, and missing tests without modifying anything",
       "mode": "subagent",
-      "model": "xai/grok-4.6#xhigh",
+      "model": "xai/grok-4.6",
+      "variant": "xhigh",
       "color": "#6c5ce7",
       "steps": 10,
-      "permissions": [
-        { "action": "edit", "resource": "*", "effect": "deny" },
-        { "action": "shell", "resource": "*", "effect": "ask" },
-        { "action": "shell", "resource": "git diff*", "effect": "allow" },
-        { "action": "shell", "resource": "git status*", "effect": "allow" },
-        { "action": "shell", "resource": "git log*", "effect": "allow" },
-        { "action": "shell", "resource": "git show*", "effect": "allow" }
-      ]
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "ask",
+          "git diff*": "allow",
+          "git status*": "allow",
+          "git log*": "allow",
+          "git show*": "allow"
+        }
+      }
     },
-
     "digest": {
       "description": "Summarizes large documents, logs, or unfamiliar codebases into structured briefs",
       "mode": "subagent",
-      "model": "minimax/MiniMax-M3",
+      "model": "minimax-coding-plan/MiniMax-M3",
       "color": "#00b894",
-      "system": "Digest the provided material into a structured brief: purpose, key components, notable patterns, risks or open questions. Be concrete and cite file paths or sections. Do not speculate beyond the material."
+      "prompt": "Digest the provided material into a structured brief: purpose, key components, notable patterns, risks or open questions. Be concrete and cite file paths or sections. Do not speculate beyond the material."
     },
-
     "grunt": {
       "description": "Mechanical, low-judgment edits: renames, boilerplate, test scaffolding, repetitive migrations, applying an already-specified pattern across files",
       "mode": "subagent",
-      "model": "minimax/MiniMax-M3",
+      "model": "ollama/qwen3.5:9b",
       "color": "#fdcb6e",
       "steps": 25,
-      "system": "You execute mechanical, well-specified edits exactly as instructed: renames, boilerplate, scaffolding, and repetitive pattern application. Do not redesign, refactor beyond the instruction, or make judgment calls — if the instruction is ambiguous, stop and report the ambiguity instead of guessing.",
-      "permissions": [
-        { "action": "subagent", "resource": "*", "effect": "deny" },
-        { "action": "shell", "resource": "git *", "effect": "ask" }
-      ]
+      "prompt": "You perform mechanical, fully specified code changes. Do not explore broadly, design, reinterpret requirements, or refactor beyond the instruction. A valid task names the exact files or scope, the transformation, an exemplar when pattern matching is required, forbidden scope, acceptance criteria, and a verification command. If essential information is missing or ambiguous, stop and report the missing detail. Otherwise, read the specified files, apply the smallest consistent diff, avoid unrelated files, run the requested verification, and report changed files plus the verification result. Never delegate to another agent.",
+      "permission": {
+        "task": "deny",
+        "bash": {
+          "git *": "ask"
+        }
+      }
     }
   },
 
-  // Pin Sol's effort ladder explicitly so variant_cycle has the full range
-  // even if the catalog metadata is incomplete for the ChatGPT-login path
-  "providers": {
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "apiKey": "ollama",
+        "baseURL": "http://127.0.0.1:11434/v1",
+        "includeUsage": true
+      },
+      "models": {
+        "qwen3.5:9b": {
+          "name": "Qwen 3.5 9B",
+          "options": {
+            "reasoningEffort": "none"
+          }
+        }
+      }
+    },
     "xai": {
       "models": {
         "grok-4.6": {
-          "variants": [
-            { "id": "high",  "settings": { "reasoningEffort": "high" } },
-            { "id": "xhigh", "settings": { "reasoningEffort": "xhigh" } }
-          ]
+          "variants": {
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" }
+          }
         }
       }
     },
     "openai": {
       "models": {
         "gpt-5.6-sol": {
-          "variants": [
-            { "id": "low",    "settings": { "reasoningEffort": "low" } },
-            { "id": "medium", "settings": { "reasoningEffort": "medium" } },
-            { "id": "high",   "settings": { "reasoningEffort": "high" } }
-          ]
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" }
+          }
         }
       }
     }
