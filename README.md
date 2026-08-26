@@ -20,6 +20,7 @@ dotfiles/
 ├── ghostty/config              # terminal — theme, font, splits, keybinds
 ├── starship/starship.toml      # prompt
 ├── zsh/.zshrc                  # shell — PATH, tools, aliases, plugin order
+├── bash/sugar.bash             # extra aliases / fzf theming for bash (Omarchy)
 ├── git/.gitconfig              # git + delta diffs
 ├── zed/settings.json           # Zed editor
 ├── vscode/settings.json        # VS Code

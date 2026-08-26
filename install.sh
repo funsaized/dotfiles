@@ -70,6 +70,7 @@ echo
 
 bold "Shell & prompt"
 link zsh/.zshrc              "$HOME/.zshrc"
+link bash/sugar.bash         "$HOME/.config/dotfiles/sugar.bash"
 link starship/starship.toml  "$HOME/.config/starship.toml"
 link git/.gitconfig          "$HOME/.gitconfig"
 echo
@@ -112,7 +113,11 @@ copy_editor() {
 
 bold "Editors"
 copy_editor zed/settings.json    "$HOME/.config/zed/settings.json"
-copy_editor vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+if [[ "$(uname -s)" == Darwin ]]; then
+  copy_editor vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+elif [[ -d $HOME/.config/Code/User ]]; then
+  copy_editor vscode/settings.json "$HOME/.config/Code/User/settings.json"
+fi
 echo
 
 bold "Claude Code skills"
