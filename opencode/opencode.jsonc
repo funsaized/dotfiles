@@ -76,15 +76,15 @@
       "variant": "xhigh"
     },
     "explore": {
-      "model": "deepseek/deepseek-v4-flash"
+      "model": "deepseek/deepseek-v4-flash-vision-exp"
     },
     "general": {
-      "model": "deepseek/deepseek-v4-flash"
+      "model": "deepseek/deepseek-v4-flash-vision-exp"
     },
     "operator": {
-      "description": "General-purpose coding agent powered by DeepSeek V4 Flash",
+      "description": "General-purpose coding agent powered by DeepSeek V4 Flash Vision Exp",
       "mode": "primary",
-      "model": "deepseek/deepseek-v4-flash"
+      "model": "deepseek/deepseek-v4-flash-vision-exp"
     },
     "frontend": {
       "description": "Frontend and visual work: React/Next.js components, styling, layout, animation, interactive polish",
@@ -115,7 +115,7 @@
     "digest": {
       "description": "Summarizes large documents, logs, or unfamiliar codebases into structured briefs",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-flash",
+      "model": "deepseek/deepseek-v4-flash-vision-exp",
       "color": "#00b894",
       "prompt": "Digest the provided material into a structured brief: purpose, key components, notable patterns, risks or open questions. Be concrete and cite file paths or sections. Do not speculate beyond the material."
     },
