@@ -76,7 +76,8 @@
       "variant": "xhigh"
     },
     "explore": {
-      "model": "deepseek/deepseek-v4-flash-vision-exp"
+      "model": "openai/gpt-5.6-luna",
+      "variant": "low"
     },
     "general": {
       "model": "deepseek/deepseek-v4-flash-vision-exp"
@@ -115,7 +116,8 @@
     "digest": {
       "description": "Summarizes large documents, logs, or unfamiliar codebases into structured briefs",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-flash-vision-exp",
+      "model": "openai/gpt-5.6-luna",
+      "variant": "xhigh",
       "color": "#00b894",
       "prompt": "Digest the provided material into a structured brief: purpose, key components, notable patterns, risks or open questions. Be concrete and cite file paths or sections. Do not speculate beyond the material."
     },
@@ -170,6 +172,15 @@
             "low": { "reasoningEffort": "low" },
             "medium": { "reasoningEffort": "medium" },
             "high": { "reasoningEffort": "high" }
+          }
+        },
+        "gpt-5.6-luna": {
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" },
+            "max": { "reasoningEffort": "max" }
           }
         }
       }
