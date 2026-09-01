@@ -76,15 +76,15 @@
       "variant": "xhigh"
     },
     "explore": {
-      "model": "minimax-coding-plan/MiniMax-M3"
+      "model": "deepseek/deepseek-v4-flash"
     },
     "general": {
-      "model": "minimax-coding-plan/MiniMax-M3"
+      "model": "deepseek/deepseek-v4-flash"
     },
     "operator": {
-      "description": "General-purpose coding agent powered by MiniMax M3",
+      "description": "General-purpose coding agent powered by DeepSeek V4 Flash",
       "mode": "primary",
-      "model": "minimax-coding-plan/MiniMax-M3"
+      "model": "deepseek/deepseek-v4-flash"
     },
     "frontend": {
       "description": "Frontend and visual work: React/Next.js components, styling, layout, animation, interactive polish",
@@ -115,7 +115,7 @@
     "digest": {
       "description": "Summarizes large documents, logs, or unfamiliar codebases into structured briefs",
       "mode": "subagent",
-      "model": "minimax-coding-plan/MiniMax-M3",
+      "model": "deepseek/deepseek-v4-flash",
       "color": "#00b894",
       "prompt": "Digest the provided material into a structured brief: purpose, key components, notable patterns, risks or open questions. Be concrete and cite file paths or sections. Do not speculate beyond the material."
     },
