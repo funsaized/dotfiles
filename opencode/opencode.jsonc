@@ -2,12 +2,18 @@
   "$schema": "https://opencode.ai/config.json",
 
   "autoupdate": false,
+
+  // Sol is the center of gravity.
   "model": "openai/gpt-5.6-sol",
   "default_agent": "build",
+
   "plugin": ["@dietrichgebert/ponytail@4.9.0"],
+
   "permission": {
+    "external_directory": {
+      "~/Documents/programming/funsaized/**": "allow"
+    },
     "bash": {
-      "git push *": "ask",
       "rm -rf *": "ask"
     },
     "edit": {
@@ -20,13 +26,14 @@
 
   "compaction": {
     "auto": true,
-    "preserve_recent_tokens": 20000,
-    "reserved": 20000
+    "prune": true,
+    "preserve_recent_tokens": 24000,
+    "reserved": 16000
   },
 
   "tool_output": {
-    "max_lines": 800,
-    "max_bytes": 24576
+    "max_lines": 1000,
+    "max_bytes": 32768
   },
 
   "watcher": {
@@ -51,57 +58,113 @@
 
   "command": {
     "review": {
-      "description": "Cross-vendor review of the current diff",
+      "description": "Independent Grok review of the current diff",
       "agent": "reviewer",
-      "template": "Run git diff (and git diff --staged) to see the current changes. Review them for correctness, security issues, regressions, and missing tests. Report findings in severity order with file:line references before any summary. Do not modify anything."
+      "template": "Run git diff and git diff --staged. Review the changes adversarially for correctness, security, regressions, architectural mistakes, edge cases, unnecessary complexity, and missing tests. Report concrete findings in severity order with file:line references. Distinguish confirmed defects from suggestions. Do not modify anything."
     },
+
     "brief": {
       "description": "Digest a file or directory into a structured brief",
       "agent": "digest",
-      "template": "Digest $ARGUMENTS into a structured brief: purpose, key components, notable patterns, risks."
+      "template": "Digest $ARGUMENTS into a structured brief: purpose, architecture, key components, dependencies, notable patterns, risks, and open questions. Cite relevant file paths."
     },
+
     "handoff": {
-      "description": "Summarize session state for the offshore team",
-      "template": "Summarize what was changed this session, why, open questions, and suggested next steps, written for a developer picking this up cold."
+      "description": "Summarize current development state",
+      "agent": "digest",
+      "template": "Summarize what changed this session, why it changed, important implementation decisions, verification performed, unresolved questions, and suggested next steps. Write for a developer picking up the work cold."
     }
   },
 
   "agent": {
+    /*
+     * PRIMARY AGENTS
+     */
+
     "build": {
-      "model": "openai/gpt-5.6-sol",
-      "variant": "low"
-    },
-    "plan": {
-      "model": "xai/grok-4.6",
-      "variant": "xhigh"
-    },
-    "explore": {
-      "model": "openai/gpt-5.6-luna",
-      "variant": "low"
-    },
-    "general": {
-      "model": "deepseek/deepseek-v4-flash-vision-exp"
-    },
-    "operator": {
-      "description": "General-purpose coding agent powered by DeepSeek V4 Flash Vision Exp",
+      "description": "Primary implementation agent",
       "mode": "primary",
-      "model": "deepseek/deepseek-v4-flash-vision-exp"
+      "model": "openai/gpt-5.6-sol",
+      "variant": "medium",
+      "prompt": "Own implementation end-to-end. Prefer the smallest correct solution consistent with the existing architecture. Delegate bounded research, exploration, mechanical work, or independent verification when useful, but retain responsibility for implementation decisions and final integration."
     },
+
+    "plan": {
+      "description": "Architecture and implementation planning",
+      "mode": "primary",
+      "model": "openai/gpt-5.6-sol",
+      "variant": "high",
+      "prompt": "Design implementation plans grounded in the actual codebase. Explore before making architectural assumptions. Prefer incremental changes over new abstractions. Identify affected files, invariants, risks, test strategy, and explicit acceptance criteria."
+    },
+
+    /*
+     * DEEPSEEK WORKFORCE
+     */
+
+    "general": {
+      "description": "Fast general-purpose research, code analysis, and bounded engineering tasks",
+      "mode": "subagent",
+      "model": "deepseek/deepseek-v4-flash",
+      "steps": 20,
+      "prompt": "Handle bounded engineering investigations efficiently. Read broadly when needed, but return concise concrete findings with file paths, relevant symbols, risks, and a recommended action. Do not make speculative architectural changes."
+    },
+
+    "frontier": {
+      "description": "Hard delegated engineering problems requiring deeper reasoning or autonomous coding",
+      "mode": "subagent",
+      "model": "deepseek/deepseek-v4-pro",
+      "steps": 30,
+      "prompt": "Solve difficult but bounded engineering problems independently. Inspect the relevant code before acting. Optimize for correctness over cleverness. Stay within the requested scope, verify your work, and report assumptions, changed files, and verification results."
+    },
+
+    "explore": {
+      "description": "Fast read-only codebase exploration and dependency tracing",
+      "mode": "subagent",
+      "model": "deepseek/deepseek-v4-flash",
+      "steps": 15,
+      "prompt": "Explore the codebase without modifying it. Locate relevant implementations, trace control and data flow, identify dependencies and conventions, and return concise findings with file paths and symbols."
+    },
+
+    "vision": {
+      "description": "Analyze screenshots, rendered UI, diagrams, and other visual material",
+      "mode": "subagent",
+      "model": "deepseek/deepseek-v4-flash-vision-exp",
+      "steps": 15,
+      "prompt": "Analyze visual inputs together with the relevant implementation. Identify concrete visual, layout, interaction, or rendering issues and connect findings to likely code locations when possible."
+    },
+
+    "digest": {
+      "description": "Compress large documents, logs, diffs, and unfamiliar code into structured context",
+      "mode": "subagent",
+      "model": "deepseek/deepseek-v4-flash",
+      "steps": 12,
+      "prompt": "Produce a dense factual brief from the supplied material. Capture purpose, architecture, important implementation details, dependencies, patterns, risks, unresolved questions, and relevant file paths. Preserve facts; do not invent conclusions."
+    },
+
+    /*
+     * GROK SPECIALISTS
+     */
+
     "frontend": {
-      "description": "Frontend and visual work: React/Next.js components, styling, layout, animation, interactive polish",
+      "description": "Frontend expert for React/Next.js implementation, visual design, layout, animation, responsiveness, and interaction polish",
       "mode": "all",
       "model": "xai/grok-4.6",
       "variant": "high",
       "color": "#e17055",
-      "prompt": "You specialize in frontend implementation: React/Next.js components, styling, layout, animation, and interactive polish. Favor working, visually complete first passes. Match the project's existing component patterns and design tokens before introducing new ones."
+      "steps": 30,
+      "prompt": "Act as a senior frontend engineer and visual product designer. Inspect the project's existing component patterns, design tokens, responsive conventions, and dependencies before implementing. Produce polished, production-ready React/Next.js UI with strong hierarchy, spacing, typography, responsiveness, accessibility, interaction states, and restrained animation. Reuse existing primitives before introducing new abstractions. Verify the rendered result with Playwright when useful."
     },
+
     "reviewer": {
-      "description": "Reviews changes for correctness, security, regressions, and missing tests without modifying anything",
+      "description": "Independent adversarial reviewer for correctness, architecture, security, regressions, unnecessary complexity, and missing tests",
       "mode": "subagent",
       "model": "xai/grok-4.6",
       "variant": "xhigh",
       "color": "#6c5ce7",
-      "steps": 10,
+      "steps": 15,
+
+      "prompt": "Review as an independent senior engineer who did not author the implementation. Try to falsify the solution rather than validate it. Inspect surrounding code as necessary. Prioritize correctness bugs, security issues, regressions, broken invariants, concurrency/state problems, architectural mismatches, unnecessary complexity, and missing tests. Separate confirmed findings from speculative concerns. Do not modify files.",
+
       "permission": {
         "edit": "deny",
         "bash": {
@@ -113,21 +176,20 @@
         }
       }
     },
-    "digest": {
-      "description": "Summarizes large documents, logs, or unfamiliar codebases into structured briefs",
-      "mode": "subagent",
-      "model": "openai/gpt-5.6-luna",
-      "variant": "xhigh",
-      "color": "#00b894",
-      "prompt": "Digest the provided material into a structured brief: purpose, key components, notable patterns, risks or open questions. Be concrete and cite file paths or sections. Do not speculate beyond the material."
-    },
+
+    /*
+     * LOCAL CHEAP LABOR
+     */
+
     "grunt": {
       "description": "Mechanical, low-judgment edits: renames, boilerplate, test scaffolding, repetitive migrations, applying an already-specified pattern across files",
       "mode": "subagent",
       "model": "ollama/qwen3.5:9b",
       "color": "#fdcb6e",
       "steps": 25,
-      "prompt": "You perform mechanical, fully specified code changes. Do not explore broadly, design, reinterpret requirements, or refactor beyond the instruction. A valid task names the exact files or scope, the transformation, an exemplar when pattern matching is required, forbidden scope, acceptance criteria, and a verification command. If essential information is missing or ambiguous, stop and report the missing detail. Otherwise, read the specified files, apply the smallest consistent diff, avoid unrelated files, run the requested verification, and report changed files plus the verification result. Never delegate to another agent.",
+
+      "prompt": "Perform only mechanical, fully specified changes. Do not redesign, broadly explore, reinterpret requirements, or refactor beyond the instruction. The task must identify scope, transformation, constraints, and verification. Apply the smallest consistent diff, avoid unrelated files, run the requested verification, and report changed files and results. Never delegate.",
+
       "permission": {
         "task": "deny",
         "bash": {
@@ -155,32 +217,35 @@
         }
       }
     },
+
     "xai": {
       "models": {
         "grok-4.6": {
           "variants": {
-            "high": { "reasoningEffort": "high" },
-            "xhigh": { "reasoningEffort": "xhigh" }
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            }
           }
         }
       }
     },
+
     "openai": {
       "models": {
         "gpt-5.6-sol": {
           "variants": {
-            "low": { "reasoningEffort": "low" },
-            "medium": { "reasoningEffort": "medium" },
-            "high": { "reasoningEffort": "high" }
-          }
-        },
-        "gpt-5.6-luna": {
-          "variants": {
-            "low": { "reasoningEffort": "low" },
-            "medium": { "reasoningEffort": "medium" },
-            "high": { "reasoningEffort": "high" },
-            "xhigh": { "reasoningEffort": "xhigh" },
-            "max": { "reasoningEffort": "max" }
+            "low": {
+              "reasoningEffort": "low"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            }
           }
         }
       }
