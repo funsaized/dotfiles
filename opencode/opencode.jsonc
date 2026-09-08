@@ -93,7 +93,7 @@
       "description": "Architecture and implementation planning",
       "mode": "primary",
       "model": "openai/gpt-6-astra",
-      "variant": "high",
+      "variant": "low",
       "prompt": "Design implementation plans grounded in the actual codebase. Explore before making architectural assumptions. Prefer incremental changes over new abstractions. Identify affected files, invariants, risks, test strategy, and explicit acceptance criteria."
     },
 
