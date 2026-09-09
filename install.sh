@@ -135,6 +135,14 @@ link opencode/opencode.jsonc "$HOME/.config/opencode/opencode.jsonc"
 link opencode/AGENTS.md      "$HOME/.config/opencode/AGENTS.md"
 echo
 
+# Neovim config has no credential fields, so it is symlinked like the shell.
+# The whole directory, not per-file: LazyVim expects init.lua, lua/, plugin/
+# to live together, and a mixed tree of real files + repo links is how you
+# end up debugging a theme.lua that isn't the one you edited.
+bold "Neovim (LazyVim)"
+link nvim "$HOME/.config/nvim"
+echo
+
 if (( BREW )); then
   bold "CLI tools"
   if ! command -v brew >/dev/null; then
@@ -143,11 +151,14 @@ if (( BREW )); then
     # What the configs actually reference. Missing any of these degrades
     # gracefully except eza/fd, which the aliases and fzf commands need.
     PKGS=(starship eza bat fd ripgrep fzf zoxide git-delta lazygit direnv jq)
+    # Neovim + the LSP/formatters LazyVim would otherwise Mason-install.
+    # Same set on macOS and Linuxbrew so the two machines stay in parity.
+    NVIM_PKGS=(neovim lua-language-server stylua shfmt)
     if (( DRY )); then
-      echo "  would: brew install ${PKGS[*]}"
+      echo "  would: brew install ${PKGS[*]} ${NVIM_PKGS[*]}"
     else
-      brew install "${PKGS[@]}"
-      ok "installed: ${PKGS[*]}"
+      brew install "${PKGS[@]}" "${NVIM_PKGS[@]}"
+      ok "installed: ${PKGS[*]} ${NVIM_PKGS[*]}"
     fi
   fi
   echo
@@ -164,4 +175,6 @@ cat <<'EOF'
        git config --global user.email "you@example.com"
   3. Add your API keys to ~/.config/zed/settings.json (search "YOUR KEY HERE").
   4. Restart your shell:  exec zsh
+  5. First nvim launch clones plugins from lazy-lock.json (needs network).
+     On Omarchy, nvim is already installed; this script only links the config.
 EOF

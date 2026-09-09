@@ -44,7 +44,7 @@ export BAT_THEME="Catppuccin Mocha"
 
 # Must be set BEFORE section 3 — the edit* aliases are defined with double
 # quotes, so $EDITOR is expanded at definition time, not at call time.
-export EDITOR="${EDITOR:-vim}"
+export EDITOR="${EDITOR:-nvim}"
 
 # SDKMAN — must come after the other PATH exports so its shims win for
 # java/gradle/maven. (Its own installer insists on "end of file"; what it
@@ -114,10 +114,14 @@ alias gd="git diff"               # routed through delta, see ~/.gitconfig
 alias gl="git log --oneline --graph --decorate -20"
 alias lg="lazygit"
 
+# nvim — match Omarchy: `vim` is nvim
+alias vim="nvim"
+
 # Config editing
 alias editstarship="$EDITOR ~/.config/starship.toml"
 alias editghost="$EDITOR ~/.config/ghostty/config"
 alias editzsh="$EDITOR ~/.zshrc"
+alias editnvim="$EDITOR ~/.config/nvim"
 alias reload="source ~/.zshrc"
 
 # Navigation

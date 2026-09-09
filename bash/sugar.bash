@@ -65,11 +65,17 @@ if command -v lazygit >/dev/null; then
   alias lg='lazygit'
 fi
 
+# nvim — match Omarchy: `vim` is nvim when it is installed
+if command -v nvim >/dev/null; then
+  alias vim='nvim'
+fi
+
 # Config editing — $EDITOR is expanded at definition time on purpose
 alias editstarship="$EDITOR ~/.config/starship.toml"
 alias editghost="$EDITOR ~/.config/ghostty/config"
 alias editbash="$EDITOR ~/.bashrc"
 alias editzed="$EDITOR ~/.config/zed/settings.json"
+alias editnvim="$EDITOR ~/.config/nvim"
 alias reload='source ~/.bashrc'
 
 # Navigation

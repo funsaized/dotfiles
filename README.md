@@ -5,9 +5,10 @@ applications that happen to be open at once — same font, same palette, same
 theme, same muscle memory.
 
 Tuned for full-stack TypeScript / Java / Python with AI-assisted workflows on
-macOS. Every non-obvious line carries a comment explaining *why*, and the
-reasoning behind the whole thing is written up in
-[`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
+macOS and Omarchy Linux. Neovim is one tree on both; Ghostty/Zsh are the macOS
+side and `bash/sugar.bash` is the Omarchy overlay. Every non-obvious line
+carries a comment explaining *why*, and the reasoning behind the whole thing is
+written up in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
 
 Take what works. Ignore the rest.
 
@@ -22,6 +23,7 @@ dotfiles/
 ├── zsh/.zshrc                  # shell — PATH, tools, aliases, plugin order
 ├── bash/sugar.bash             # extra aliases / fzf theming for bash (Omarchy)
 ├── git/.gitconfig              # git + delta diffs
+├── nvim/                       # LazyVim — same tree on macOS and Linux
 ├── zed/settings.json           # Zed editor
 ├── vscode/settings.json        # VS Code
 ├── claude/skills/notebooklm/   # Claude Code skill — NotebookLM bridge
@@ -46,11 +48,17 @@ cd ~/dotfiles
 Nothing is ever clobbered — existing files are moved to `<name>.bak-<timestamp>`
 first.
 
-**Shell and terminal configs are symlinked** so editing `~/.zshrc` edits the
-repo and `git diff` shows your drift. **Editor configs are copied, not
-symlinked**, because they contain API-key fields — see
+**Shell, terminal, and Neovim configs are symlinked** so editing `~/.zshrc` or
+`~/.config/nvim` edits the repo and `git diff` shows your drift. **Zed and
+VS Code configs are copied, not symlinked**, because they contain API-key
+fields — see
 [§7 of the methodology](docs/METHODOLOGY.md#7-design-against-the-failure-mode-not-just-the-happy-path)
 for why that asymmetry exists.
+
+On Omarchy, Neovim is already in the base image; `./install.sh` only links
+the config. On macOS, `./install.sh --brew` installs `neovim`,
+`lua-language-server`, `stylua`, and `shfmt` alongside the rest of the CLI
+tools. Same versions, same lockfile, both machines.
 
 ### Fonts (not installed automatically)
 
@@ -297,7 +305,7 @@ fzf and zoxide loading after it.
 
 **`$EDITOR` must be exported before the `edit*` aliases.** Those aliases are
 defined with double quotes, so `$EDITOR` expands at *definition* time; defined
-after, they silently become bare filenames.
+after, they silently become bare filenames. It defaults to `nvim`.
 
 #### Tools
 
@@ -342,6 +350,95 @@ lives.
 ---
 
 ## Editors
+
+### Neovim (LazyVim)
+
+One config tree, both machines. `~/.config/nvim` is a symlink to `nvim/` in
+this repo — not a copy, and not a pair of `nvim-macos/` / `nvim-linux/`
+folders. LazyVim, the plugin lockfile, extras, and the few local overrides
+are identical; the two files that *behave* differently per OS do so at
+runtime.
+
+```
+nvim/
+├── init.lua
+├── lazy-lock.json                         # pin plugin commits
+├── lazyvim.json                           # extras: neo-tree
+├── lua/config/options.lua                 # no relativenumber, no format-on-save
+├── lua/config/remote_clipboard.lua        # OSC 52 + OS clipboard
+├── lua/config/autocmds.lua                # Operator Mono semantic italics
+├── lua/plugins/theme.lua                  # Omarchy live theme, else aether
+├── lua/plugins/all-themes.lua             # colorschemes available to hot-reload
+├── lua/plugins/omarchy-theme-hotreload.lua
+└── plugin/after/transparency.lua
+```
+
+First launch clones plugins from `lazy-lock.json` (needs network). After that
+it starts cold.
+
+#### Theme without a second file to keep in sync
+
+On Omarchy, `lua/plugins/theme.lua` `dofile`s
+`~/.local/state/omarchy/current/theme/neovim.lua`, so `omarchy theme set`
+is what nvim shows. The old Omarchy trick — a symlink at `theme.lua` pointing
+into that state dir — is Linux-only and breaks the moment you clone this repo
+onto a Mac.
+
+Everywhere else, the same file falls back to the Gruvy Glass / aether
+snapshot this repo was built against. Restart nvim after a theme switch, or
+don't: the hotreload plugin watches Omarchy's `theme.name` (a regular file,
+rewritten in place) so a running session picks up the new palette. That watch
+is a no-op on macOS.
+
+`gthelding/monokai-pro.nvim` is in `all-themes.lua` with `enabled = false`.
+The GitHub repo is gone; leaving the spec (disabled) means an old Omarchy 3.8
+theme file that names it doesn't error, and we don't try to clone a 404.
+
+#### Clipboard that survives SSH, tmux, and herdr
+
+`remote_clipboard.lua` only takes over when nvim is inside tmux, SSH, or
+herdr. Local GUI nvim uses the built-in provider and you never notice this
+file exists.
+
+| | Copy | Paste |
+|---|---|---|
+| Linux (Wayland) | `wl-copy` **and** OSC 52 | `wl-paste` |
+| macOS | `pbcopy` **and** OSC 52 | `pbpaste` |
+| no display (SSH without a clipboard) | OSC 52 | OSC 52 query |
+
+OSC 52 is the piece that makes a yank in a remote nvim land on the laptop
+you are actually looking at. The OS clipboard is the piece that makes a copy
+from a browser still pasteable inside nvim. Doing both is the whole point.
+
+macOS has no primary selection; `+` and `*` share the pasteboard.
+
+#### The local overrides, and why they exist
+
+| | |
+|---|---|
+| `relativenumber = false` | Absolute line numbers. Relative numbers are a motion aid I don't use, and they add a column that changes every time the cursor moves. |
+| `vim.g.autoformat = false` | Format-on-save is a surprise in unfamiliar trees. Conform still runs via `<leader>cf`. |
+| Semantic italics | Comments, keywords, types, parameters — the same italic-as-structure rule Zed uses, re-applied on `ColorScheme` so an Omarchy hot-reload doesn't drop it. Needs Operator Mono's real italic. |
+| Transparency | Clears backgrounds on Normal/Float/NeoTree/Notify so the terminal's own opacity shows through. |
+| Snacks scroll off | Animated scrolling fights a fast terminal. |
+| News alerts off | LazyVim's changelog popup on first launch of a new version. |
+
+Extras: `lazyvim.plugins.extras.editor.neo-tree` only. LSP formatters
+(`lua-language-server`, `stylua`, `shfmt`) are installed by `--brew` on
+macOS and already present (or Mason-installed) on Omarchy, so both sides
+skip a first-run Mason download for the same tools.
+
+#### Daily driver notes
+
+Leader is Space, same as LazyVim stock. `<leader>e` is neo-tree, `<leader>ff`
+files, `<leader>sg` live grep, `<leader>gg` lazygit. `vim` is aliased to
+`nvim` in both zsh and the Omarchy bash overlay, so muscle memory from
+`vim **<TAB>` still works.
+
+`editnvim` opens `~/.config/nvim` in `$EDITOR`. Because that path is a
+symlink to this repo, the edit is a git change.
+
+---
 
 ### Zed
 
@@ -642,6 +739,7 @@ so copying a block of terminal output doesn't paste a ragged right edge.
 editghost      # then cmd+shift+, to reload Ghostty live -- no restart
 editstarship   # takes effect on the very next prompt
 editzsh        # then: reload
+editnvim       # ~/.config/nvim, which is this repo
 ```
 
 Before reloading Ghostty, `ghostty +validate-config` will catch typos. Worth
@@ -686,6 +784,7 @@ indicator with the current state, so a **blocked** `.envrc` — the usual cause 
 | `ll` `lt` `b` | Listing w/ git · tree · bat |
 | `n` / `N` in a diff | Jump between files in the pager |
 | `editghost` + `cmd+shift+,` | Edit and hot-reload terminal config |
+| `editnvim` · `vim` | Open the LazyVim config · nvim (aliased) |
 
 ---
 

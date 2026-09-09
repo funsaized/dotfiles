@@ -245,11 +245,14 @@ Three choices exist purely because of how they fail:
 
 - **`cat` is not aliased to `bat`.** Shadowing a coreutil is fine until it
   isn't — inside a one-off pipeline, at 2am. The alias is `b`.
-- **Editor settings are copied by `install.sh`, not symlinked.** They contain
-  API-key fields. Symlinking would overwrite real keys with placeholders on
-  install, and worse, put real keys into `git status` once filled in. That is
-  precisely how credentials reach public repos. Shell and terminal configs hold
-  no secrets, so those *are* symlinked and stay live-editable.
+- **Zed and VS Code settings are copied by `install.sh`, not
+  symlinked.** They contain API-key fields. Symlinking would overwrite real
+  keys with placeholders on install, and worse, put real keys into `git
+  status` once filled in. That is precisely how credentials reach public
+  repos. Shell, terminal, and Neovim configs hold no secrets, so those *are*
+  symlinked and stay live-editable. Neovim is one tree on macOS and Linux —
+  OS differences (clipboard, Omarchy theme) are resolved at runtime, not by
+  duplicating the folder.
 - **`scripts/scan-secrets.sh` exists and runs as a pre-commit hook**, because
   the previous point is a mitigation, not a guarantee.
 
