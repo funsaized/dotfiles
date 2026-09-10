@@ -104,7 +104,7 @@
     "general": {
       "description": "Fast general-purpose research, code analysis, and bounded engineering tasks",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-flash",
+      "model": "deepseek/deepseek-flash",
       "steps": 20,
       "prompt": "Handle bounded engineering investigations efficiently. Read broadly when needed, but return concise concrete findings with file paths, relevant symbols, risks, and a recommended action. Do not make speculative architectural changes."
     },
@@ -112,7 +112,7 @@
     "frontier": {
       "description": "Hard delegated engineering problems requiring deeper reasoning or autonomous coding",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-pro",
+      "model": "deepseek/deepseek-flash",
       "steps": 30,
       "prompt": "Solve difficult but bounded engineering problems independently. Inspect the relevant code before acting. Optimize for correctness over cleverness. Stay within the requested scope, verify your work, and report assumptions, changed files, and verification results."
     },
@@ -120,7 +120,7 @@
     "explore": {
       "description": "Fast read-only codebase exploration and dependency tracing",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-flash",
+      "model": "deepseek/deepseek-flash",
       "steps": 15,
       "prompt": "Explore the codebase without modifying it. Locate relevant implementations, trace control and data flow, identify dependencies and conventions, and return concise findings with file paths and symbols."
     },
@@ -128,7 +128,7 @@
     "vision": {
       "description": "Analyze screenshots, rendered UI, diagrams, and other visual material",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-flash-vision-exp",
+      "model": "deepseek/deepseek-flash",
       "steps": 15,
       "prompt": "Analyze visual inputs together with the relevant implementation. Identify concrete visual, layout, interaction, or rendering issues and connect findings to likely code locations when possible."
     },
@@ -136,7 +136,7 @@
     "digest": {
       "description": "Compress large documents, logs, diffs, and unfamiliar code into structured context",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-flash",
+      "model": "deepseek/deepseek-flash",
       "steps": 12,
       "prompt": "Produce a dense factual brief from the supplied material. Capture purpose, architecture, important implementation details, dependencies, patterns, risks, unresolved questions, and relevant file paths. Preserve facts; do not invent conclusions."
     },
