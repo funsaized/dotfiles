@@ -1,180 +1,210 @@
 #!/usr/bin/env bash
-#
-#  dotfiles installer
-#
-#  Symlinks configs from this repo into place. Symlinks (not copies) so that
-#  editing ~/.zshrc edits the repo and `git diff` shows your drift.
-#
-#    ./install.sh            symlink everything, backing up what's there
-#    ./install.sh --dry-run  print what would happen, touch nothing
-#    ./install.sh --brew     also install the CLI tools these configs assume
-#
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-STAMP="$(date +%Y%m%d-%H%M%S)"
+CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+STAMP="$(date +%Y%m%d-%H%M%S)-$$"
 DRY=0
-BREW=0
+PACKAGES=0
+YES=0
+
+usage() {
+  cat <<'EOF'
+Usage: ./install.sh [--dry-run] [--packages] [--yes]
+
+  --dry-run   Show changes without applying them
+  --packages  Also install supported development tools
+  --yes       Approve changes without an interactive prompt
+EOF
+}
 
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY=1 ;;
-    --brew)    BREW=1 ;;
-    -h|--help) sed -n '2,12p' "$0" | sed 's/^#//'; exit 0 ;;
-    *) echo "unknown flag: $arg" >&2; exit 2 ;;
+    --packages) PACKAGES=1 ;;
+    --yes) YES=1 ;;
+    -h|--help) usage; exit 0 ;;
+    *) printf 'unknown flag: %s\n' "$arg" >&2; exit 2 ;;
   esac
 done
 
-bold() { printf '\033[1m%s\033[0m\n' "$*"; }
-ok()   { printf '  \033[32m✓\033[0m %s\n' "$*"; }
+case "$(uname -s)" in
+  Darwin) PLATFORM=macos ;;
+  Linux)
+    command -v omarchy >/dev/null || {
+      echo "Dotbento supports Omarchy Linux, not generic Linux." >&2
+      exit 1
+    }
+    PLATFORM=omarchy
+    ;;
+  *) echo "Dotbento supports macOS and Omarchy Linux only." >&2; exit 1 ;;
+esac
+
+command -v git >/dev/null || { echo "Git is required to install shared Git settings." >&2; exit 1; }
+
+if (( PACKAGES )) && [[ $PLATFORM == macos ]] && ! command -v brew >/dev/null; then
+  echo "Homebrew is required: https://brew.sh" >&2
+  exit 1
+fi
+
+printf 'Dotbento plan for %s (%s): Zed, Neovim, OpenCode, Git' "$PLATFORM" "$CONFIG_HOME"
+[[ $PLATFORM == macos ]] && printf ', Zsh, Starship, Ghostty'
+(( PACKAGES )) && printf '; install requested packages'
+printf '\nExisting files will be backed up before replacement.\n'
+
+if (( ! DRY && ! YES )); then
+  printf 'Apply Dotbento config for %s%s? [y/N] ' "$PLATFORM" "$([[ $PACKAGES == 1 ]] && printf ' and install packages')"
+  read -r answer
+  [[ $answer == [Yy] || $answer == [Yy][Ee][Ss] ]] || { echo "Cancelled."; exit 0; }
+fi
+
+ok() { printf '  \033[32m✓\033[0m %s\n' "$*"; }
 warn() { printf '  \033[33m!\033[0m %s\n' "$*"; }
 
-# link <source-relative-to-repo> <destination-absolute>
-link() {
-  local src="$REPO/$1" dst="$2"
-
-  if [[ ! -e $src ]]; then
-    warn "missing in repo, skipped: $1"
-    return
-  fi
-
-  # Already pointing where we want? Nothing to do.
-  if [[ -L $dst && "$(readlink "$dst")" == "$src" ]]; then
-    ok "already linked: $dst"
-    return
-  fi
-
-  if (( DRY )); then
-    [[ -e $dst ]] && echo "  would back up $dst -> $dst.bak-$STAMP"
-    echo "  would link    $dst -> $src"
-    return
-  fi
-
-  mkdir -p "$(dirname "$dst")"
-
-  # Never clobber. Real files get moved aside with a timestamp; stale symlinks
-  # are just removed (there's nothing to preserve).
+backup() {
+  local dst=$1
   if [[ -L $dst ]]; then
     rm "$dst"
   elif [[ -e $dst ]]; then
     mv "$dst" "$dst.bak-$STAMP"
-    warn "backed up existing $dst -> $(basename "$dst").bak-$STAMP"
+    warn "backed up $dst"
   fi
-
-  ln -s "$src" "$dst"
-  ok "linked $dst"
 }
 
-bold "dotfiles -> \$HOME    ${DRY:+(dry run)}"
-echo
-
-bold "Shell & prompt"
-link zsh/.zshrc              "$HOME/.zshrc"
-link bash/sugar.bash         "$HOME/.config/dotfiles/sugar.bash"
-link starship/starship.toml  "$HOME/.config/starship.toml"
-link git/.gitconfig          "$HOME/.gitconfig"
-echo
-
-bold "Terminal"
-link ghostty/config          "$HOME/.config/ghostty/config"
-# On macOS Ghostty ALSO reads this path and merges it with the one above.
-# Leaving a real config there is how you end up with settings that silently
-# override the repo. Point it at nothing.
-GHOSTTY_APPSUPPORT="$HOME/Library/Application Support/com.mitchellh.ghostty/config"
-if [[ -e $GHOSTTY_APPSUPPORT && ! -L $GHOSTTY_APPSUPPORT ]]; then
-  if (( DRY )); then
-    echo "  would neutralize $GHOSTTY_APPSUPPORT"
-  else
-    mv "$GHOSTTY_APPSUPPORT" "$GHOSTTY_APPSUPPORT.bak-$STAMP"
-    printf '# Intentionally empty. Real config: ~/.config/ghostty/config\n' > "$GHOSTTY_APPSUPPORT"
-    warn "neutralized the Application Support config (it merges with ours)"
-  fi
-fi
-echo
-
-# Editor settings are COPIED, not symlinked, and that asymmetry is deliberate.
-# These two files contain API-key fields. Symlinking them would (a) overwrite
-# your real keys with the repo's "YOUR KEY HERE" placeholders, and (b) put your
-# real keys into `git status` the moment you filled them in — which is exactly
-# how credentials end up in a public repo. Copy once, then diverge safely.
-copy_editor() {
+link() {
   local src="$REPO/$1" dst="$2"
   [[ -e $src ]] || { warn "missing in repo, skipped: $1"; return; }
-  if (( DRY )); then
-    [[ -e $dst ]] && echo "  would back up $dst -> $dst.bak-$STAMP"
-    echo "  would COPY    $dst (not symlinked — contains key fields)"
-    return
+  if [[ -L $dst && "$(readlink "$dst")" == "$src" ]]; then
+    ok "already linked: $dst"
+  elif (( DRY )); then
+    [[ -e $dst || -L $dst ]] && printf '  would back up %s\n' "$dst"
+    printf '  would link %s -> %s\n' "$dst" "$src"
+  else
+    mkdir -p "$(dirname "$dst")"
+    backup "$dst"
+    ln -s "$src" "$dst"
+    ok "linked $dst"
   fi
-  mkdir -p "$(dirname "$dst")"
-  [[ -e $dst ]] && cp "$dst" "$dst.bak-$STAMP" && warn "backed up $(basename "$dst")"
-  cp "$src" "$dst"
-  ok "copied $dst  (re-add your API keys)"
 }
 
-bold "Editors"
-copy_editor zed/settings.json    "$HOME/.config/zed/settings.json"
-if [[ "$(uname -s)" == Darwin ]]; then
-  copy_editor vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
-elif [[ -d $HOME/.config/Code/User ]]; then
-  copy_editor vscode/settings.json "$HOME/.config/Code/User/settings.json"
-fi
-echo
-
-bold "Claude Code skills"
-if (( DRY )); then
-  echo "  would copy claude/skills/* -> ~/.claude/skills/"
-else
-  mkdir -p "$HOME/.claude/skills"
-  cp -R "$REPO/claude/skills/." "$HOME/.claude/skills/"
-  ok "copied skills to ~/.claude/skills/"
-fi
-echo
-
-bold "OpenCode"
-link opencode/opencode.jsonc "$HOME/.config/opencode/opencode.jsonc"
-link opencode/AGENTS.md      "$HOME/.config/opencode/AGENTS.md"
-echo
-
-# Neovim config has no credential fields, so it is symlinked like the shell.
-# The whole directory, not per-file: LazyVim expects init.lua, lua/, plugin/
-# to live together, and a mixed tree of real files + repo links is how you
-# end up debugging a theme.lua that isn't the one you edited.
-bold "Neovim (LazyVim)"
-link nvim "$HOME/.config/nvim"
-echo
-
-if (( BREW )); then
-  bold "CLI tools"
-  if ! command -v brew >/dev/null; then
-    warn "Homebrew not found — https://brew.sh"
+copy_tree() {
+  local src="$REPO/$1" dst="$2"
+  if [[ -d $dst && ! -L $dst ]] && diff -qr "$src" "$dst" >/dev/null; then
+    ok "already current: $dst"
+  elif (( DRY )); then
+    [[ -e $dst || -L $dst ]] && printf '  would back up %s\n' "$dst"
+    printf '  would copy %s -> %s\n' "$src" "$dst"
   else
-    # What the configs actually reference. Missing any of these degrades
-    # gracefully except eza/fd, which the aliases and fzf commands need.
-    PKGS=(starship eza bat fd ripgrep fzf zoxide git-delta lazygit direnv jq)
-    # Neovim + the LSP/formatters LazyVim would otherwise Mason-install.
-    # Same set on macOS and Linuxbrew so the two machines stay in parity.
-    NVIM_PKGS=(neovim lua-language-server stylua shfmt)
+    mkdir -p "$(dirname "$dst")"
+    backup "$dst"
+    cp -a "$src" "$dst"
+    ok "copied $dst"
+  fi
+}
+
+install_git() {
+  local xdg="$CONFIG_HOME/git/config" include="$REPO/git/.gitconfig" old="$HOME/.gitconfig" dst
+
+  detach_git_config() {
+    local file=$1 strip_shared=$2
+    local tmp="$file.dotbento-migrate"
     if (( DRY )); then
-      echo "  would: brew install ${PKGS[*]} ${NVIM_PKGS[*]}"
+      printf '  would convert %s symlink to a real file\n' "$file"
+      return
+    fi
+
+    if [[ -e $file ]]; then
+      cp -L "$file" "$tmp"
     else
-      brew install "${PKGS[@]}" "${NVIM_PKGS[@]}"
-      ok "installed: ${PKGS[*]} ${NVIM_PKGS[*]}"
+      : > "$tmp"
+    fi
+    if (( strip_shared )); then
+      local section
+      for section in merge diff push pull fetch rebase init column branch rerere alias; do
+        git config --file "$tmp" --remove-section "$section" 2>/dev/null || true
+      done
+    fi
+    rm "$file"
+    mv "$tmp" "$file"
+    ok "converted $file symlink to a real file"
+  }
+
+  if [[ -L $old && "$(readlink "$old")" == "$include" ]]; then
+    detach_git_config "$old" 1
+  fi
+
+  [[ -e $old || -L $old ]] && dst=$old || dst=$xdg
+
+  if [[ -L $dst ]]; then
+    [[ "$(readlink "$dst")" == "$include" ]] && detach_git_config "$dst" 1 || detach_git_config "$dst" 0
+  fi
+
+  if [[ -f $dst ]] && git config --file "$dst" --get-all include.path 2>/dev/null | grep -Fxq "$include"; then
+    ok "already included: $include"
+  elif (( DRY )); then
+    printf '  would add %s to %s\n' "$include" "$dst"
+  else
+    mkdir -p "$(dirname "$dst")"
+    [[ -e $dst ]] && cp -L "$dst" "$dst.bak-$STAMP"
+    git config --file "$dst" --add include.path "$include"
+    ok "included shared Git settings from $dst"
+  fi
+}
+
+install_git
+link zed/settings.json "$CONFIG_HOME/zed/settings.json"
+opencode_json="$CONFIG_HOME/opencode/opencode.json"
+if [[ -e $opencode_json || -L $opencode_json ]]; then
+  if (( DRY )); then
+    printf '  would back up conflicting %s\n' "$opencode_json"
+  else
+    mv "$opencode_json" "$opencode_json.bak-$STAMP"
+    warn "backed up conflicting $opencode_json"
+  fi
+fi
+link opencode/opencode.jsonc "$CONFIG_HOME/opencode/opencode.jsonc"
+link opencode/AGENTS.md "$CONFIG_HOME/opencode/AGENTS.md"
+
+if [[ $PLATFORM == macos ]]; then
+  link zsh/.zshrc "$HOME/.zshrc"
+  link starship/starship.toml "$CONFIG_HOME/starship.toml"
+  link ghostty/config "$CONFIG_HOME/ghostty/config"
+
+  ghostty_app="$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+  if [[ -e $ghostty_app && ! -L $ghostty_app ]]; then
+    if (( DRY )); then
+      printf '  would neutralize %s\n' "$ghostty_app"
+    else
+      mv "$ghostty_app" "$ghostty_app.bak-$STAMP"
+      printf '# Real config: %s/ghostty/config\n' "$CONFIG_HOME" > "$ghostty_app"
+      warn "neutralized Ghostty's secondary config"
     fi
   fi
-  echo
+
+  link nvim "$CONFIG_HOME/nvim"
+else
+  copy_tree nvim "$CONFIG_HOME/nvim"
 fi
 
-bold "Next steps"
-cat <<'EOF'
-  1. Fonts are NOT installed by this script. These configs expect:
-       - MesloLGS Nerd Font  (required — icons/glyphs)
-           brew install --cask font-meslo-lg-nerd-font
-       - Operator Mono Lig   (optional, commercial — falls back to Meslo)
-  2. Put your identity back in git:
-       git config --global user.name  "Your Name"
-       git config --global user.email "you@example.com"
-  3. Add your API keys to ~/.config/zed/settings.json (search "YOUR KEY HERE").
-  4. Restart your shell:  exec zsh
-  5. First nvim launch clones plugins from lazy-lock.json (needs network).
-     On Omarchy, nvim is already installed; this script only links the config.
-EOF
+if (( PACKAGES )); then
+  if [[ $PLATFORM == macos ]]; then
+    formulas=(starship eza bat fd ripgrep fzf zoxide lazygit direnv jq neovim lua-language-server stylua shfmt zsh-autosuggestions zsh-syntax-highlighting opencode)
+    casks=(ghostty zed font-meslo-lg-nerd-font)
+    if (( DRY )); then
+      printf '  would run: brew install %s\n' "${formulas[*]}"
+      printf '  would run: brew install --cask %s\n' "${casks[*]}"
+    else
+      brew install "${formulas[@]}"
+      brew install --cask "${casks[@]}"
+    fi
+  else
+    packages=(neovim lua-language-server stylua shfmt zed opencode)
+    if (( DRY )); then
+      printf '  would run: omarchy pkg add %s\n' "${packages[*]}"
+    else
+      omarchy pkg add "${packages[@]}"
+    fi
+  fi
+fi
+
+echo "Done. Restart OpenCode after configuration changes."

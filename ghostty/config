@@ -55,8 +55,7 @@ font-family = MesloLGS Nerd Font Mono
 # the Lig cut — measured from the .otf files, x-height 490, cap height 620,
 # advance 550 for both — so bold text lines up perfectly with everything else.
 # (The `SSm Lig` cut also has a real bold, but it is ~11% larger and ~11%
-# heavier at the same nominal size, which reads soft on a Retina display. See
-# the font-cuts section in the repo README for the measurements.)
+# heavier at the same nominal size, which reads soft on a Retina display.)
 #
 # `font-style-bold` is REQUIRED here, not optional: Hoefler registers this
 # family's weights unusually — Book is usWeightClass 325 and Bold is 400, not

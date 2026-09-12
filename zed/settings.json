@@ -258,11 +258,7 @@
 
   // ── Formatting ────────────────────────────────────────────────────────────
   "format_on_save": "on",
-  // "formatter": "prettier",
-  // "prettier": {
-  //     "allowed": true,
-  //     "package_manager": "npm",
-  // },
+  "prettier": { "allowed": false },
 
   // ── Languages ─────────────────────────────────────────────────────────────
   "languages": {
@@ -284,8 +280,7 @@
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
         { "code_action": "source.fixAll.oxc" }
-      ],
-      "prettier": { "allowed": false }
+      ]
     },
     "JSX": {
       "tab_size": 2,
@@ -294,8 +289,7 @@
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
         { "code_action": "source.fixAll.oxc" }
-      ],
-      "prettier": { "allowed": false }
+      ]
     },
     "TypeScript": {
       "tab_size": 2,
@@ -307,8 +301,7 @@
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
         { "code_action": "source.fixAll.oxc" }
-      ],
-      "prettier": { "allowed": false }
+      ]
     },
     "TSX": {
       "tab_size": 2,
@@ -317,8 +310,7 @@
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
         { "code_action": "source.fixAll.oxc" }
-      ],
-      "prettier": { "allowed": false }
+      ]
     },
     "C++": {
       "colorize_brackets": true
@@ -327,47 +319,25 @@
     "JSON": {
       "tab_size": 2,
       "language_servers": ["oxfmt", "...", "!biome"],
-      "formatter": { "language_server": { "name": "oxfmt" } },
-      "prettier": { "allowed": false }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "JSONC": {
       "tab_size": 2,
       "language_servers": ["oxfmt", "...", "!biome"],
-      "formatter": { "language_server": { "name": "oxfmt" } },
-      "prettier": { "allowed": false }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "CSS": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+      "formatter": "language_server"
     },
     "SCSS": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+      "formatter": "language_server"
     },
     "HTML": {
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+      "formatter": "language_server"
     },
     "Markdown": {
       "soft_wrap": "editor_width",
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--write", "--stdin-filepath", "{buffer_path}"]
-        }
-      }
+      "formatter": "language_server"
     }
   },
 
@@ -409,22 +379,6 @@
       "initialization_options": {
         "settings": {
           "java": {
-            "configuration": {
-              "runtimes": [
-                {
-                  "name": "JavaSE-25",
-                  "path": "/Users/saiguy/.sdkman/candidates/java/current",
-                  "default": true
-                }
-              ]
-            },
-            "import": {
-              "gradle": {
-                "java": {
-                  "home": "/Users/saiguy/.sdkman/candidates/java/current"
-                }
-              }
-            },
             "eclipse": {
               "downloadSources": true
             },
@@ -561,24 +515,6 @@
     "status_style": "label_color",
     "tree_view": true,
     "collapse_untracked_diff": false
-  },
-
-  // ── Context Servers (MCP) ─────────────────────────────────────────────────
-  "context_servers": {
-    "mcp-server-context7": {
-      "enabled": true,
-      "remote": false,
-      "settings": {
-        "context7_api_key": "YOUR KEY HERE"
-      }
-    },
-    "mcp-server-github": {
-      "enabled": true,
-      "remote": false,
-      "settings": {
-        "github_personal_access_token": "YOUR PAT HERE"
-      }
-    }
   },
 
   // ── Calls ─────────────────────────────────────────────────────────────────

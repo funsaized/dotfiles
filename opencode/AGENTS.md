@@ -5,7 +5,7 @@ and win on conflict.
 
 ## Environment
 
-- macOS. Editor: Zed. Terminal: Ghostty and tmux sessions herdr. Node via npm; Rust via cargo; Java via Maven unless the repo says otherwise.
+- macOS or Omarchy Linux. Editors: Zed and Neovim. Prefer Omarchy's shell and terminal defaults; macOS uses Ghostty and Zsh. Node via npm; Rust via cargo; Java via Maven unless the repo says otherwise.
 - Stacks I work in: Java/Spring Boot, TypeScript/Next.js/Tanstack/React, Python (AI/ML/Data), Rust (TUI/ratatui).
 - Check the repo's AGENTS.md and lockfiles before assuming a package manager or build tool.
 

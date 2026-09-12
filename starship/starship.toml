@@ -38,7 +38,7 @@
 # It is the most expensive single MODULE, but starship runs modules in
 # parallel, so removing it buys ~nothing at this scale; the ~35 ms floor is
 # starship's own process startup. It's dropped for signal-to-noise, not speed.
-# Re-enabling it is cheap: flip `disabled` below and add $git_metrics here.
+# Re-enabling it is cheap: add $git_metrics here and configure the module.
 format = """
 $username\
 $hostname\
@@ -169,17 +169,6 @@ cherry_pick = '🍒 CHERRY-PICKING'
 bisect = '🔍 BISECTING'
 am = '📧 AM'
 am_or_rebase = '♻️ AM/REBASE'
-
-# DISABLED for signal-to-noise, not for speed — see the measured numbers in
-# the note on `format` above. To restore: set disabled = false AND add
-# $git_metrics to the format string. Both steps, or it silently does nothing.
-[git_metrics]
-disabled = true
-format = '([+$added]($added_style) )([-$deleted]($deleted_style) )'
-added_style = 'bold ok'
-deleted_style = 'bold err'
-only_nonzero_diffs = true
-
 
 # ── Language runtimes ──────────────────────────────────────────────────────
 [nodejs]

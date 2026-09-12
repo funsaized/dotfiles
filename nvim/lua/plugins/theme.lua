@@ -8,8 +8,7 @@
 --
 -- Everywhere else (macOS, non-Omarchy Linux), fall back to the Gruvy Glass
 -- / aether snapshot this repo was built against. Restart nvim after an
--- Omarchy theme switch; the hotreload plugin still covers in-session
--- LazyReload events.
+-- Omarchy theme switch.
 
 local omarchy = vim.fn.expand("~/.local/state/omarchy/current/theme/neovim.lua")
 if vim.fn.filereadable(omarchy) == 1 then

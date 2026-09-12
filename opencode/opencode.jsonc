@@ -10,30 +10,27 @@
   "plugin": ["@dietrichgebert/ponytail@4.9.0"],
 
   "permission": {
-    "external_directory": {
-      "~/Documents/programming/funsaized/**": "allow"
-    },
     "bash": {
-      "rm -rf *": "ask"
+      "rm -rf *": "ask",
     },
     "edit": {
-      "~/.config/**": "ask"
+      "~/.config/**": "ask",
     },
     "read": {
-      "**/.env*": "ask"
-    }
+      "**/.env*": "ask",
+    },
   },
 
   "compaction": {
     "auto": true,
     "prune": true,
     "preserve_recent_tokens": 24000,
-    "reserved": 16000
+    "reserved": 16000,
   },
 
   "tool_output": {
     "max_lines": 1000,
-    "max_bytes": 32768
+    "max_bytes": 32768,
   },
 
   "watcher": {
@@ -45,35 +42,35 @@
       "build/**",
       "coverage/**",
       ".turbo/**",
-      "**/*.log"
-    ]
+      "**/*.log",
+    ],
   },
 
   "mcp": {
     "playwright": {
       "type": "local",
-      "command": ["npx", "-y", "@playwright/mcp"]
-    }
+      "command": ["npx", "-y", "@playwright/mcp"],
+    },
   },
 
   "command": {
     "review": {
       "description": "Independent Grok review of the current diff",
       "agent": "reviewer",
-      "template": "Run git diff and git diff --staged. Review the changes adversarially for correctness, security, regressions, architectural mistakes, edge cases, unnecessary complexity, and missing tests. Report concrete findings in severity order with file:line references. Distinguish confirmed defects from suggestions. Do not modify anything."
+      "template": "Run git diff and git diff --staged. Review the changes adversarially for correctness, security, regressions, architectural mistakes, edge cases, unnecessary complexity, and missing tests. Report concrete findings in severity order with file:line references. Distinguish confirmed defects from suggestions. Do not modify anything.",
     },
 
     "brief": {
       "description": "Digest a file or directory into a structured brief",
       "agent": "digest",
-      "template": "Digest $ARGUMENTS into a structured brief: purpose, architecture, key components, dependencies, notable patterns, risks, and open questions. Cite relevant file paths."
+      "template": "Digest $ARGUMENTS into a structured brief: purpose, architecture, key components, dependencies, notable patterns, risks, and open questions. Cite relevant file paths.",
     },
 
     "handoff": {
       "description": "Summarize current development state",
       "agent": "digest",
-      "template": "Summarize what changed this session, why it changed, important implementation decisions, verification performed, unresolved questions, and suggested next steps. Write for a developer picking up the work cold."
-    }
+      "template": "Summarize what changed this session, why it changed, important implementation decisions, verification performed, unresolved questions, and suggested next steps. Write for a developer picking up the work cold.",
+    },
   },
 
   "agent": {
@@ -86,7 +83,7 @@
       "mode": "primary",
       "model": "openai/gpt-5.6-sol-build",
       "variant": "medium",
-      "prompt": "Own implementation end-to-end. Prefer the smallest correct solution consistent with the existing architecture. Delegate bounded research, exploration, mechanical work, or independent verification when useful, but retain responsibility for implementation decisions and final integration."
+      "prompt": "Own implementation end-to-end. Prefer the smallest correct solution consistent with the existing architecture. Delegate bounded research, exploration, mechanical work, or independent verification when useful, but retain responsibility for implementation decisions and final integration.",
     },
 
     "plan": {
@@ -94,7 +91,7 @@
       "mode": "primary",
       "model": "openai/gpt-6-astra",
       "variant": "low",
-      "prompt": "Design implementation plans grounded in the actual codebase. Explore before making architectural assumptions. Prefer incremental changes over new abstractions. Identify affected files, invariants, risks, test strategy, and explicit acceptance criteria."
+      "prompt": "Design implementation plans grounded in the actual codebase. Explore before making architectural assumptions. Prefer incremental changes over new abstractions. Identify affected files, invariants, risks, test strategy, and explicit acceptance criteria.",
     },
 
     /*
@@ -106,7 +103,7 @@
       "mode": "subagent",
       "model": "deepseek/deepseek-flash",
       "steps": 20,
-      "prompt": "Handle bounded engineering investigations efficiently. Read broadly when needed, but return concise concrete findings with file paths, relevant symbols, risks, and a recommended action. Do not make speculative architectural changes."
+      "prompt": "Handle bounded engineering investigations efficiently. Read broadly when needed, but return concise concrete findings with file paths, relevant symbols, risks, and a recommended action. Do not make speculative architectural changes.",
     },
 
     "frontier": {
@@ -114,7 +111,7 @@
       "mode": "subagent",
       "model": "deepseek/deepseek-flash",
       "steps": 30,
-      "prompt": "Solve difficult but bounded engineering problems independently. Inspect the relevant code before acting. Optimize for correctness over cleverness. Stay within the requested scope, verify your work, and report assumptions, changed files, and verification results."
+      "prompt": "Solve difficult but bounded engineering problems independently. Inspect the relevant code before acting. Optimize for correctness over cleverness. Stay within the requested scope, verify your work, and report assumptions, changed files, and verification results.",
     },
 
     "explore": {
@@ -122,7 +119,7 @@
       "mode": "subagent",
       "model": "deepseek/deepseek-flash",
       "steps": 15,
-      "prompt": "Explore the codebase without modifying it. Locate relevant implementations, trace control and data flow, identify dependencies and conventions, and return concise findings with file paths and symbols."
+      "prompt": "Explore the codebase without modifying it. Locate relevant implementations, trace control and data flow, identify dependencies and conventions, and return concise findings with file paths and symbols.",
     },
 
     "vision": {
@@ -130,7 +127,7 @@
       "mode": "subagent",
       "model": "deepseek/deepseek-flash",
       "steps": 15,
-      "prompt": "Analyze visual inputs together with the relevant implementation. Identify concrete visual, layout, interaction, or rendering issues and connect findings to likely code locations when possible."
+      "prompt": "Analyze visual inputs together with the relevant implementation. Identify concrete visual, layout, interaction, or rendering issues and connect findings to likely code locations when possible.",
     },
 
     "digest": {
@@ -138,7 +135,7 @@
       "mode": "subagent",
       "model": "deepseek/deepseek-flash",
       "steps": 12,
-      "prompt": "Produce a dense factual brief from the supplied material. Capture purpose, architecture, important implementation details, dependencies, patterns, risks, unresolved questions, and relevant file paths. Preserve facts; do not invent conclusions."
+      "prompt": "Produce a dense factual brief from the supplied material. Capture purpose, architecture, important implementation details, dependencies, patterns, risks, unresolved questions, and relevant file paths. Preserve facts; do not invent conclusions.",
     },
 
     /*
@@ -152,7 +149,7 @@
       "variant": "high",
       "color": "#e17055",
       "steps": 30,
-      "prompt": "Act as a senior frontend engineer and visual product designer. Inspect the project's existing component patterns, design tokens, responsive conventions, and dependencies before implementing. Produce polished, production-ready React/Next.js UI with strong hierarchy, spacing, typography, responsiveness, accessibility, interaction states, and restrained animation. Reuse existing primitives before introducing new abstractions. Verify the rendered result with Playwright when useful."
+      "prompt": "Act as a senior frontend engineer and visual product designer. Inspect the project's existing component patterns, design tokens, responsive conventions, and dependencies before implementing. Produce polished, production-ready React/Next.js UI with strong hierarchy, spacing, typography, responsiveness, accessibility, interaction states, and restrained animation. Reuse existing primitives before introducing new abstractions. Verify the rendered result with Playwright when useful.",
     },
 
     "reviewer": {
@@ -172,9 +169,9 @@
           "git diff*": "allow",
           "git status*": "allow",
           "git log*": "allow",
-          "git show*": "allow"
-        }
-      }
+          "git show*": "allow",
+        },
+      },
     },
 
     /*
@@ -193,10 +190,10 @@
       "permission": {
         "task": "deny",
         "bash": {
-          "git *": "ask"
-        }
-      }
-    }
+          "git *": "ask",
+        },
+      },
+    },
   },
 
   "provider": {
@@ -206,16 +203,16 @@
       "options": {
         "apiKey": "ollama",
         "baseURL": "http://127.0.0.1:11434/v1",
-        "includeUsage": true
+        "includeUsage": true,
       },
       "models": {
         "qwen3.5:9b": {
           "name": "Qwen 3.5 9B",
           "options": {
-            "reasoningEffort": "none"
-          }
-        }
-      }
+            "reasoningEffort": "none",
+          },
+        },
+      },
     },
 
     "xai": {
@@ -223,14 +220,14 @@
         "grok-4.6": {
           "variants": {
             "high": {
-              "reasoningEffort": "high"
+              "reasoningEffort": "high",
             },
             "xhigh": {
-              "reasoningEffort": "xhigh"
-            }
-          }
-        }
-      }
+              "reasoningEffort": "xhigh",
+            },
+          },
+        },
+      },
     },
 
     "openai": {
@@ -240,17 +237,17 @@
           "name": "GPT-5.6 Sol (Build)",
           "variants": {
             "low": {
-              "reasoningEffort": "low"
+              "reasoningEffort": "low",
             },
             "medium": {
-              "reasoningEffort": "medium"
+              "reasoningEffort": "medium",
             },
             "high": {
-              "reasoningEffort": "high"
-            }
-          }
-        }
-      }
-    }
-  }
+              "reasoningEffort": "high",
+            },
+          },
+        },
+      },
+    },
+  },
 }

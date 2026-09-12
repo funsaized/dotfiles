@@ -1,29 +1,3 @@
-[user]
-	# [USER-SPECIFIC] your identity
-	name = YOUR NAME HERE
-	email = YOUR EMAIL HERE
-
-# ── Diffs via delta ────────────────────────────────────────────────────────
-# delta re-renders git's diff output with syntax highlighting and real
-# word-level intra-line diffs, so a one-character change reads as one
-# character instead of two whole replaced lines.
-[core]
-	pager = delta
-
-[interactive]
-	# Makes `git add -p` use delta too.
-	diffFilter = delta --color-only
-
-[delta]
-	navigate = true          ; n / N jump between files in the pager
-	side-by-side = true
-	line-numbers = true
-	hyperlinks = true
-	syntax-theme = Catppuccin Mocha
-	file-style = bold yellow
-	file-decoration-style = yellow ul
-	hunk-header-decoration-style = blue box
-
 [merge]
 	# Shows the common ancestor in conflict blocks, not just the two sides.
 	# Turns "which of these is right?" into "here is what each side changed."

@@ -2,9 +2,8 @@
 #
 #  Credential scanner for this repo.
 #
-#  This repo publishes editor configs that have API-key FIELDS in them. The
-#  fields are supposed to hold "YOUR KEY HERE". One careless `cp` from a live
-#  machine and they hold a real token instead — in a public repo.
+#  This repo publishes live-linked tool configuration. A token accidentally
+#  pasted into one of those files would immediately appear in `git status`.
 #
 #    ./scripts/scan-secrets.sh            scan the working tree
 #    ./scripts/scan-secrets.sh --staged   scan only what's staged (hook mode)

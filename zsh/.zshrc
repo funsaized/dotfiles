@@ -15,15 +15,18 @@
 
 # ── 1. PATH & environment ──────────────────────────────────────────────────
 
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+if command -v brew >/dev/null; then
+  BREW_PREFIX="$(brew --prefix)"
+  export PATH="$BREW_PREFIX/opt/openjdk/bin:$PATH"
+fi
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+command -v pyenv >/dev/null && eval "$(pyenv init - zsh)"
 
 # uv / local binaries
-. "$HOME/.local/bin/env"
+[[ -r "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
@@ -44,7 +47,9 @@ export BAT_THEME="Catppuccin Mocha"
 
 # Must be set BEFORE section 3 — the edit* aliases are defined with double
 # quotes, so $EDITOR is expanded at definition time, not at call time.
-export EDITOR="${EDITOR:-nvim}"
+if [[ -z ${EDITOR:-} ]]; then
+  command -v nvim >/dev/null && export EDITOR=nvim || export EDITOR=vim
+fi
 
 # SDKMAN — must come after the other PATH exports so its shims win for
 # java/gradle/maven. (Its own installer insists on "end of file"; what it
@@ -56,27 +61,29 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # ── 2. Tool initialization ─────────────────────────────────────────────────
 
 # Prompt
-eval "$(starship init zsh)"
+command -v starship >/dev/null && eval "$(starship init zsh)"
 
 # direnv — per-directory env vars. The starship [direnv] module surfaces
 # whether the current .envrc is loaded or blocked.
-eval "$(direnv hook zsh)"
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 
 # zoxide — frecency-ranked `cd`. Learns the dirs you actually use.
 #   z dash        jump to the best match for "dash" from anywhere
 #   zi            interactive picker (uses fzf)
 #   z -           previous directory
-eval "$(zoxide init zsh)"
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 
 # fzf — Ctrl-R fuzzy history, Ctrl-T file picker, Alt-C directory jump.
 # Native integration (fzf >= 0.48); replaces the old key-bindings.zsh sourcing.
-source <(fzf --zsh)
+command -v fzf >/dev/null && source <(fzf --zsh)
 
 # fd powers the pickers so they respect .gitignore and skip .git/ — much
 # faster and far less noise than the default `find`.
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+if command -v fd >/dev/null; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+fi
 
 # Catppuccin Mocha palette for fzf, so the picker matches Ghostty and Zed.
 export FZF_DEFAULT_OPTS=" \
@@ -87,35 +94,37 @@ export FZF_DEFAULT_OPTS=" \
 --color=selected-bg:#45475a"
 
 # Preview file contents with syntax highlighting in the Ctrl-T picker.
-export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
+command -v bat >/dev/null && export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
 # Preview directory contents in the Alt-C picker.
-export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
+command -v eza >/dev/null && export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
 
 
 # ── 3. Aliases ─────────────────────────────────────────────────────────────
 
 # eza — modern ls
-alias ls="eza --icons"
-alias ll="eza -l --icons --git"
-alias la="eza -la --icons --git"
-alias lt="eza --tree --level=2 --icons --git-ignore"
+if command -v eza >/dev/null; then
+  alias ls="eza --icons"
+  alias ll="eza -l --icons --git"
+  alias la="eza -la --icons --git"
+  alias lt="eza --tree --level=2 --icons --git-ignore"
+fi
 
 # bat — cat with syntax highlighting.
 # Deliberately NOT aliased over `cat`: shadowing a coreutil is the kind of
 # thing that bites you inside a one-off pipeline at 2am. Type `b` instead.
-alias b="bat --paging=never"
+command -v bat >/dev/null && alias b="bat --paging=never"
 
 # git
 alias gs="git status --short --branch"
 alias ga="git add"
 alias gc="git commit -m"
 alias gp="git push"
-alias gd="git diff"               # routed through delta, see ~/.gitconfig
+alias gd="git diff"
 alias gl="git log --oneline --graph --decorate -20"
-alias lg="lazygit"
+command -v lazygit >/dev/null && alias lg="lazygit"
 
 # nvim — match Omarchy: `vim` is nvim
-alias vim="nvim"
+command -v nvim >/dev/null && alias vim="nvim"
 
 # Config editing
 alias editstarship="$EDITOR ~/.config/starship.toml"
@@ -156,5 +165,7 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4317
 #
 # Previously this sat mid-file with fzf/zoxide loading after it.
 
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[[ -n ${BREW_PREFIX:-} && -r "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && \
+  source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -n ${BREW_PREFIX:-} && -r "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && \
+  source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
