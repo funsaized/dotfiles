@@ -1,6 +1,6 @@
 # Dotbento
 
-An opinionated bootstrap for the development machines we support:
+An opinionated bootstrap for the development machines I support:
 
 - macOS with Zsh, Ghostty, Starship, Zed, Neovim, and OpenCode
 - Omarchy Linux with its shell and terminal defaults, plus Zed, Neovim, and
