@@ -9,6 +9,18 @@ An opinionated bootstrap for the development machines we support:
 Dotbento intentionally does not replace Omarchy's Bash, Starship, or terminal
 configuration.
 
+## Documentation
+
+The [design notes](docs/README.md) explain the decisions and tradeoffs behind
+each supported tool:
+
+- [bootstrap](docs/bootstrap.md) and [Git ownership](docs/git.md)
+- [Ghostty](docs/ghostty.md), [Zsh](docs/zsh.md), and
+  [Starship](docs/starship.md)
+- [Neovim](docs/neovim.md), [Zed](docs/zed.md), and
+  [OpenCode](docs/opencode.md)
+- the shared [visual system](docs/visual-system.md)
+
 ## Install
 
 ```bash
