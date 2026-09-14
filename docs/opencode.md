@@ -25,8 +25,7 @@ The workforce is intentionally role-based:
 - `digest` compresses large inputs into structured context;
 - `frontend` is available in primary and delegated contexts for rendered
   product work;
-- `reviewer` tries to falsify a proposed change;
-- `grunt` performs fully specified mechanical edits locally.
+- `reviewer` tries to falsify a proposed change.
 
 These roles reduce prompt ambiguity. They are not an organizational chart for
 its own sake. The primary agent should delegate only when the narrower job saves
@@ -37,7 +36,7 @@ context or adds independent judgment.
 The configuration assigns model families according to the work expected from
 each role. Build uses Sol, while planning uses Astra. Frontend and adversarial
 review use a high-reasoning Grok variant. Research and compression use
-DeepSeek. Mechanical edits use a local Ollama model with reasoning disabled.
+DeepSeek.
 
 This division keeps the strongest model focused on integration while allowing
 bounded work to run elsewhere. Model identifiers remain explicit so a machine
@@ -49,8 +48,7 @@ Global rules ask before commands matching `rm -rf *`, edits under `~/.config`,
 or reads of environment files.
 
 The reviewer cannot edit and can run only a small set of Git inspection
-commands without asking. The grunt agent cannot delegate further and must ask
-before Git commands.
+commands without asking.
 
 These restrictions match the agent's purpose. A read-only reviewer with broad
 write access would be a role in name only.

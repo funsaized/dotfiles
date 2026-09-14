@@ -173,48 +173,9 @@
         },
       },
     },
-
-    /*
-     * LOCAL CHEAP LABOR
-     */
-
-    "grunt": {
-      "description": "Mechanical, low-judgment edits: renames, boilerplate, test scaffolding, repetitive migrations, applying an already-specified pattern across files",
-      "mode": "subagent",
-      "model": "ollama/qwen3.5:9b",
-      "color": "#fdcb6e",
-      "steps": 25,
-
-      "prompt": "Perform only mechanical, fully specified changes. Do not redesign, broadly explore, reinterpret requirements, or refactor beyond the instruction. The task must identify scope, transformation, constraints, and verification. Apply the smallest consistent diff, avoid unrelated files, run the requested verification, and report changed files and results. Never delegate.",
-
-      "permission": {
-        "task": "deny",
-        "bash": {
-          "git *": "ask",
-        },
-      },
-    },
   },
 
   "provider": {
-    "ollama": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama (local)",
-      "options": {
-        "apiKey": "ollama",
-        "baseURL": "http://127.0.0.1:11434/v1",
-        "includeUsage": true,
-      },
-      "models": {
-        "qwen3.5:9b": {
-          "name": "Qwen 3.5 9B",
-          "options": {
-            "reasoningEffort": "none",
-          },
-        },
-      },
-    },
-
     "xai": {
       "models": {
         "grok-4.6": {
